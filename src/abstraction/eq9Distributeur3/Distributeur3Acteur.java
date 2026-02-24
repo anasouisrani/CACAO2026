@@ -60,6 +60,22 @@ public class Distributeur3Acteur implements IActeur {
     	this.journal.ajouter("ETAPE" + etape);
 
 		this.journal.ajouter("=== STOCKS === ");
+		
+		// Remettre 100 tonnes d'un produit en rayon à chaque étape
+		// Les unités sont des kg
+		double TONNE = 1000.0;
+		double replenish = 100.0 * TONNE;
+		if (this.chocosProduits == null || this.chocosProduits.size() == 0) {
+			this.chocosProduits = Filiere.LA_FILIERE.getChocolatsProduits();
+		}
+		if (this.chocosProduits != null && this.chocosProduits.size() > 0) {
+			ChocolatDeMarque toAdd = this.chocosProduits.get(0); // choix arbitraire on prend le premier produit qui vient
+			double oldQ = this.stockChocoMarque.getOrDefault(toAdd, 0.0);
+			double newQ = oldQ + replenish;
+			this.stockChocoMarque.put(toAdd, newQ);
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Remise en rayon : +100t de "+toAdd+" ("+oldQ+" -> "+newQ+")");
+		}
+		
 		double total = 0.0;
 		if (this.stockChocoMarque.keySet().size()>0) {
 			for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
