@@ -1,3 +1,3 @@
-Jeanne HERTZOG, username GitHub : jeanneHertzog
-Héloïse BIEDER, username GitHub : H3loise
-Célian Tissier, username Github: celiantiss874
+JUHEL Paul : paul-jhl
+OUISRANI Anass : anasouisrani
+ROSSIGNOL Paul : polrossig-lab
