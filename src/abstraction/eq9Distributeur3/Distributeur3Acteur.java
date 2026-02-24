@@ -4,23 +4,43 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
+import java.util.HashMap;
+import java.util.LinkedList;
+
+import abstraction.eqXRomu.general.VariablePrivee;
 
 public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
+
 	protected Journal journal;
 
+	private List<ChocolatDeMarque>chocosProduits;
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected List<ChocolatDeMarque> chocolatsVillors;
+	protected Variable totalStocksChocoMarque;
 
 	public Distributeur3Acteur() {
     this.journal = new Journal("Journal EQ9", this);
+	this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+	this.totalStocksChocoMarque = new VariablePrivee("Eq9StockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 	
 	public void initialiser() {
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		chocosProduits= Filiere.LA_FILIERE.getChocolatsProduits();
+		for (ChocolatDeMarque cm : chocosProduits) {
+			this.stockChocoMarque.put(cm, 40000.0);
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+			this.totalStocksChocoMarque.ajouter(this,  40000, cryptogramme);
+		}
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -36,8 +56,15 @@ public class Distributeur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-    int etape = Filiere.LA_FILIERE.getEtape();
-    this.journal.ajouter("ETAPE" + etape);
+   	 	int etape = Filiere.LA_FILIERE.getEtape();
+    	this.journal.ajouter("ETAPE" + etape);
+
+		this.journal.ajouter("=== STOCKS === ");
+		if (this.stockChocoMarque.keySet().size()>0) {
+			for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
+				this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.stockChocoMarque.get(cm));
+			}
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -45,12 +72,13 @@ public class Distributeur3Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Distributeur 3";
 	}
 
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(totalStocksChocoMarque);
 		return res;
 	}
 
@@ -110,7 +138,15 @@ public class Distributeur3Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			if (p instanceof ChocolatDeMarque) {
+				if (this.stockChocoMarque.keySet().contains(p)) {
+					return this.stockChocoMarque.get(p);
+				} else {
+					return 0.0;
+				}
+			} else {
+				return 0.0;
+			}
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
