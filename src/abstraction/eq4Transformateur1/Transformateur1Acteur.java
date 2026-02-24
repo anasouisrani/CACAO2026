@@ -12,6 +12,8 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur {
 	
+	private Journal journal= new Journal("numéro de l'étape",this );
+
 	protected int cryptogramme;
 
 	public Transformateur1Acteur() {
@@ -33,6 +35,8 @@ public class Transformateur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		if (Filiere.LA_FILIERE.getEtape()>=0){
+		journal.ajouter("etape:"+Filiere.LA_FILIERE.getEtape());}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -58,6 +62,7 @@ public class Transformateur1Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
 		return res;
 	}
 
