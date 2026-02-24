@@ -39,7 +39,7 @@ public class Producteur2Acteur implements IActeur {
 
 	public void next() {
 		int etape = Filiere.LA_FILIERE.getEtape();
-		journal.ajouter("Étape " + etape)
+		journal.ajouter("Étape " + etape);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
