@@ -1,3 +1,3 @@
-Zoé Loiseau Haurrell
-Coucou les amis, Paul MALATY
-Alice Jacob alice200428
+Victor Vannier-Moreau : VictorVM75
+Vassili Spiridonov : Vassili75013
+Guillaume Leroy : guillaumeleroy76
