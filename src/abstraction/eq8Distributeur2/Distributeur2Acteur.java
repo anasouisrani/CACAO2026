@@ -17,6 +17,7 @@ public class Distributeur2Acteur implements IActeur {
 	protected int cryptogramme;
 
 	public Distributeur2Acteur() {
+		this.journal = new Journal("Journal ", this);
 	}
 	
 	public void initialiser() {
