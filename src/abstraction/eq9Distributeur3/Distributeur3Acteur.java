@@ -60,11 +60,17 @@ public class Distributeur3Acteur implements IActeur {
     	this.journal.ajouter("ETAPE" + etape);
 
 		this.journal.ajouter("=== STOCKS === ");
+		double total = 0.0;
 		if (this.stockChocoMarque.keySet().size()>0) {
 			for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
-				this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.stockChocoMarque.get(cm));
+				double q = this.stockChocoMarque.get(cm);
+				this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+q);
+				total += q;
 			}
 		}
+		// Mettre à jour l'indicateur (historique) du volume total de stock
+		this.totalStocksChocoMarque.setValeur(this, total, this.cryptogramme);
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Total stock = " + total);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
