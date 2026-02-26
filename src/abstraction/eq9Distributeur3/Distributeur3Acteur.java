@@ -26,9 +26,12 @@ public class Distributeur3Acteur implements IActeur {
 	
 	public void initialiser() {
 		this.stock.clear();
-		// Exemple d'initialisation : à adapter selon votre logique métier
-		// IProduit produit = ... ;
-		// this.stock.put(produit, 10000.0);
+		// Ajoute 100 tonnes d'un produit en rayon (le premier ChocolatDeMarque disponible)
+		List<abstraction.eqXRomu.produits.ChocolatDeMarque> produits = abstraction.eqXRomu.filiere.Filiere.LA_FILIERE.getChocolatsProduits();
+		if (produits != null && !produits.isEmpty()) {
+			IProduit produit = produits.get(0);
+			this.stock.put(produit, 100000.0); // 100 tonnes = 100000 kg
+		}
 		this.indicateurStockTotal.setValeur(this, getStockTotal());
 	}
 
