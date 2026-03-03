@@ -3,6 +3,7 @@ package abstraction.eq5Transformateur2;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.Integer;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -13,8 +14,16 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	private List<Journal> Journaux;
 
 	public Transformateur2Acteur() {
+		this.Journaux = new ArrayList<Journal>();
+		this.Journaux.add(new Journal("Ventes", this));
+		this.Journaux.add(new Journal("Stock Feves", this));
+		this.Journaux.add(new Journal("Stock Chocolat", this));
+		this.Journaux.add(new Journal("Achat Contrat Cadre", this));
+		this.Journaux.add(new Journal("Achat Enchère", this));
+		this.Journaux.add(new Journal("Achat Bourse", this));
 	}
 	
 	public void initialiser() {
@@ -33,6 +42,9 @@ public class Transformateur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		for (int i = 0; i < 6; i++){
+			this.Journaux.get(i).ajouter("Etape : "+ Integer.toString((Filiere.LA_FILIERE.getEtape()))+ "\n");
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
