@@ -26,12 +26,15 @@ jobs:
               - 'src/abstraction/eq5Transformateur2/**'
             eq6Transformateur3:
               - 'src/abstraction/eq6Transformateur3/**'
-            eq7Distributeur1:
+            eq7Transformateur4:
               - 'src/abstraction/eq7Distributeur1/**'
-            eq8Distributeur2:
+              - 'src/abstraction/eq7Transformateur4/**'
+            eq8Distributeur1:
               - 'src/abstraction/eq8Distributeur2/**'
-            eq9Distributeur3:
+              - 'src/abstraction/eq8Distributeur1/**'
+            eq9Distributeur2:
               - 'src/abstraction/eq9Distributeur3/**'
+              - 'src/abstraction/eq9Distributeur2/**'
             eqXRomu:
               - 'src/abstraction/eqXRomu/**'
               - 'src/controle/**'
