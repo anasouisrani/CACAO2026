@@ -11,8 +11,9 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 
-public class Producteur2Acteur implements IActeur {
+public class Producteur2Acteur implements IActeur, IVendeurBourse {
 	
 	protected int cryptogramme;
 	protected Variable stockTotal;
@@ -138,5 +139,36 @@ public class Producteur2Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+
+	////////////////////////////////////////////////////////
+	//             En lien avec la Bourse                //
+	////////////////////////////////////////////////////////
+
+	@Override
+	public double offre(Feve f, double cours) {
+		// Thomas
+		if (f == Feve.F_MQ) {
+			return 120.0;
+		} else {
+			return 0.0;
+		}
+	}
+
+	@Override
+	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
+		Variable v = this.stocks.get(f);
+		double livrable = 0.0;
+		if (v != null) {
+			livrable = Math.min(quantiteEnT, v.getValeur());
+			v.setValeur(this, v.getValeur() - livrable);
+		}
+		journal.ajouter("Vente bourse : " + livrable + " t de " + f + " a " + coursEnEuroParT + "€/t");
+		return livrable;
+	}
+
+	@Override
+	public void notificationBlackList(int dureeEnStep) {
+		journal.ajouter("Blacklisté pendant " + dureeEnStep + " étapes");
 	}
 }
