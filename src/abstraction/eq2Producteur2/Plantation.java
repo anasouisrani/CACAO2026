@@ -1,5 +1,4 @@
 package abstraction.eq2Producteur2;
-import java.util.concurrent.ThreadLocalRandom;
 import abstraction.eqXRomu.produits.Feve;
 //PAUL DELACOUR
 public class Plantation {
@@ -26,40 +25,40 @@ public class Plantation {
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 105000 ; //  fèves par parcelle a chaque next
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
-                this.salaire_employe = ;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
+                this.salaire_employe = 0;
                 break;
  
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 3 ans
                 this.productionParParcelle = 85000;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
-                this.salaire_employe = ;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation =0 ;
+                this.salaire_employe = 0;
                 break;
 
             case F_HQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
                 this.productionParParcelle = 63000;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
-                this.salaire_employe = ;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
+                this.salaire_employe =0 ;
                 break;
 
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
-                this.productionParParcelle = ;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
-                this.salaire_employe = ;
+                this.productionParParcelle = 0;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
+                this.salaire_employe = 0;
                 break;
             
             default:
