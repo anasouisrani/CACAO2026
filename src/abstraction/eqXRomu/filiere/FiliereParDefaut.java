@@ -10,7 +10,7 @@ import abstraction.eq3Producteur3.Producteur3;
 import abstraction.eq4Transformateur1.Transformateur1;
 import abstraction.eq5Transformateur2.Transformateur2;
 import abstraction.eq6Transformateur3.Transformateur3;
-import abstraction.eq7Distributeur1.Distributeur1;
+import abstraction.eq7Transformateur4.Distributeur1;
 import abstraction.eq8Distributeur2.Distributeur2;
 import abstraction.eq9Distributeur3.Distributeur3;
 import abstraction.eqXRomu.acteurs.DistributeurX;
