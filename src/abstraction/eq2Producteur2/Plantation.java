@@ -103,7 +103,6 @@ public class Plantation {
         return age;
     }
 
-
     public int getDureeDeVie() {
         return dureeDeVie;
     }
@@ -116,38 +115,48 @@ public class Plantation {
         return productionParParcelle;
     }
 
-    // Méthode pour calculer la production totale de cette plantation
-    public double produire() {
-        if (age >= tempsAvantProduction && age < dureeDeVie) {
-            return parcelles * productionParParcelle;
-        }
-        return 0.0;
+    public boolean estMorte() {
+        return age >= dureeDeVie;
     }
 
-    // Méthode pour vieillir la plantation d'un step
-    public void vieillir() {
-        age++;
+    public void Replante() {
+        age = 0;
+        replante = true;
     }
 
-    // Méthode pour vérifier si la plantation est productive
+    public boolean getReplante() {
+        return replante;
+    }
+
     public boolean estProductive() {
         return age >= tempsAvantProduction && age < dureeDeVie;
     }
 
-    public String getEtat() {
-        if (age < tempsAvantProduction) {
-            return "en croissance";
-        } 
-    
-        else if (age >= tempsAvantProduction && age < dureeDeVie) {
-            return "en production";
-        } 
-    
-        else if (age >= dureeDeVie) {
-            return "mort";
-        }
-
-        else return "inconnu";
+    public double getprix_achat() {
+        return prix_achat;
     }
 
+    public double getprix_replantation() {
+        return prix_replantation;
+    }
+
+    public double getcout() {
+        if ((age == 0) && (replante == false)) {
+            return parcelles*prix_achat;
+        }
+        else if ((age == 0) && (replante == true)) {
+            return parcelles*prix_replantation;
+        }
+        else if (age <= dureeDeVie){
+            return parcelles*salaire_employe;
+        }
+        else {
+            return 0;
+        }
+    }
+
+
+    public double get_prix_vente() {
+        return prix_vente;
+    }
 }
