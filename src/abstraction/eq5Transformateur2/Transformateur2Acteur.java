@@ -43,6 +43,8 @@ public class Transformateur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+	/** @author Pierre
+	 */
 	public void next() {
 		for (int i = 0; i < 6; i++){
 			this.Journaux.get(i).ajouter("Etape : "+ Integer.toString((Filiere.LA_FILIERE.getEtape()))+ "\n");
