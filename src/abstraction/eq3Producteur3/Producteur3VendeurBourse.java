@@ -9,7 +9,6 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
     public Producteur3VendeurBourse() {
 		/** @author Victor Vannier-Moreau */
 		super();
-		System.err.println("Ok");
 	}
 
 	public double offre(Feve f, double cours) {
@@ -24,7 +23,6 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stock.getStock(f), quantiteEnT);
 		this.stock.retireStock(f, retire);
-		System.err.println(retire);
 		return retire;
 	}
 
