@@ -86,7 +86,9 @@ public class Lot {
 
         }
 
+    }
 
-
+    public void setQuantite(double newQuantite){
+        this.quantite = newQuantite;
     }
 }
