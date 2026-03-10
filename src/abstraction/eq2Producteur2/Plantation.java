@@ -80,4 +80,20 @@ public class Plantation {
         return age;
     }
 
+    public String getEtat() {
+        if (age < tempsAvantProduction) {
+            return "en croissance";
+        } 
+    
+        else if (age >= tempsAvantProduction && age < dureeDeVie) {
+            return "en production";
+        } 
+    
+        else if (age >= dureeDeVie) {
+            return "mort";
+        }
+
+        else return "inconnu";
+    }
+
 }
