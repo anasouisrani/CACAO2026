@@ -1,6 +1,9 @@
 package abstraction.eq1Producteur1;
+import java.util.ArrayList;
+import java.util.List;
+
 import abstraction.eqXRomu.produits.Feve;
-import java.awt.List;
+
 
 /**
  * @author Elise Dossal
@@ -9,13 +12,13 @@ import java.awt.List;
 
 public class Producteur1Stock {
 
-    private List<Lot> lots ;
+    private List<Lot> lots;
 
     public Producteur1Stock(){
-        this.lots= new List();
+        this.lots= new ArrayList<Lot>();
     }
 
-    public void add_lot(Date date, Feve f, double quantite ){
+    public void add_lot( Feve f, double quantite ){
 
 
     }
