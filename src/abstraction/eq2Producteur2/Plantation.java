@@ -13,7 +13,7 @@ public class Plantation {
     private double prix_replantation; // Prix de replantation de la plantation
     private double salaire_employe; // Prix que coûtent les employés par step par parcelle
     private boolean replante = false;
-    
+
     public Plantation(Feve typeFeve, int parcelles, int age) {
         super();
         this.typeFeve = typeFeve;
@@ -26,19 +26,19 @@ public class Plantation {
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 105000 ; //  fèves par parcelle a chaque next
-                this.prix_achat = 0;
-                this.prix_vente = 0;
-                this.prix_replantation = 0;
-                this.salaire_employe = 1800;
+                this.prix_achat = 2000 ;
+                this.prix_vente = 1200 ;
+                this.prix_replantation = 1000 ; // 1 euro par plant
+                this.salaire_employe = 1800 ;
                 break;
  
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 3 ans
                 this.productionParParcelle = 85000;
-                this.prix_achat = 0;
-                this.prix_vente = 0;
-                this.prix_replantation = 0;
+                this.prix_achat = 2500;
+                this.prix_vente = 1500 ;
+                this.prix_replantation = 1500 ; // 1.5 euro par plant
                 this.salaire_employe = 1800;
                 break;
 
@@ -46,20 +46,20 @@ public class Plantation {
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
                 this.productionParParcelle = 63000;
-                this.prix_achat = 0;
-                this.prix_vente = 0;
-                this.prix_replantation = 0;
-                this.salaire_employe = 1800;
+                this.prix_achat = 3000 ;
+                this.prix_vente = 1800 ;
+                this.prix_replantation = 1750 ; // 1.75 euro par plant
+                this.salaire_employe = 1800 ;
                 break;
 
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
                 this.productionParParcelle = 63000 ;
-                this.prix_achat = 0;
-                this.prix_vente = 0;
-                this.prix_replantation = 0;
-                this.salaire_employe = 1800;
+                this.prix_achat = 3000 ;
+                this.prix_vente = 1800 ;
+                this.prix_replantation = 2000 ; // 2 euro par plant
+                this.salaire_employe = 1800 ;
                 break;
             
             default:
