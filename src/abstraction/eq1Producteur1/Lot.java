@@ -1,17 +1,34 @@
 package abstraction.eq1Producteur1;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
+
+/**
+ * @author Elise Dossal
+ */
 
 public class Lot {
     private Feve f;
-    private Date dateCreation;
-    private Date dataPeremption;
+    private int etapeCreation;
+    private int etapePeremption;
     private double quantite;
-    
-    public Lot(Feve f, Date dateCreation, Date dataPeremption, double quantite){
+
+
+    public Lot(Feve f, int etapeCreation, int etapePeremption, double quantite){
         this.f = f;
-        this.dateCreation=dateCreation;
-        this.dataPeremption = dataPeremption;
+        this.etapeCreation=etapeCreation;
         this.quantite= quantite;
+
+        if(f == Feve.F_HQ || f == Feve.F_HQ_E){
+            this.etapePeremption = etapeCreation + 12;
+        }
+
+        if(f == Feve.F_MQ || f == Feve.F_MQ_E){
+            this.etapePeremption = etapeCreation + 24 ;
+        }
+
+        if(f == Feve.F_BQ || f == Feve.F_BQ_E){
+            this.etapePeremption = etapeCreation + 48;
+        }
 
     }
 
@@ -20,16 +37,56 @@ public class Lot {
     }
 
     public Feve getGamme(){
-
+        this.setGamme();
         return this.f;
     }
 
-    public Date getPeremptionDate(){
-        return this.dataPeremption;
+    public int getEtapePeremption(){
+        return this.etapePeremption;
     }
 
-    public Date getCreationDate(){
-        return this.dateCreation;
+    public int getEtapeCreation(){
+        return this.etapeCreation;
     }
 
+    public void setGamme(){
+        if(Filiere.LA_FILIERE.getEtape()>this.etapePeremption){
+            if(f == Feve.F_HQ){
+                this.f = Feve.F_MQ;
+                this.etapeCreation = this.etapePeremption;
+                this.etapePeremption = etapeCreation + 24;
+
+            }
+
+            if(f == Feve.F_HQ_E){
+                this.f = Feve.F_MQ_E;
+                this.etapeCreation = this.etapePeremption;
+                this.etapePeremption = etapeCreation + 24;
+
+            }
+
+            if(f == Feve.F_MQ){
+                this.f = Feve.F_BQ;
+                this.etapeCreation = this.etapePeremption;
+                this.etapePeremption = etapeCreation + 48;
+
+            }
+
+            if(f == Feve.F_MQ_E){
+                this.f = Feve.F_BQ_E;
+                this.etapeCreation = this.etapePeremption;
+                this.etapePeremption = etapeCreation + 48;
+
+            }
+
+            if(f == Feve.F_BQ || f == Feve.F_BQ_E){
+                this.quantite=0;
+
+            }
+
+        }
+
+
+
+    }
 }
