@@ -31,4 +31,22 @@ public class Producteur2Recolte extends Producteur2Acteur {
         }
     }
 
+    public void addPlantation(Plantation p) {
+        plantations.add(p);
+    }
+
+    @Override
+    public void initialiser() {
+        super.initialiser();
+
+        int ageDepart = 120; 
+
+        addPlantation(new Plantation(Feve.F_BQ, 300000, ageDepart));
+
+        addPlantation(new Plantation(Feve.F_MQ, 500000, ageDepart));
+
+        addPlantation(new Plantation(Feve.F_HQ_E, 200000, ageDepart));
+
+    }
+
 }
