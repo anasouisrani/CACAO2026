@@ -24,6 +24,7 @@ public class Producteur3Acteur implements IActeur {
 		/** @author Vassili Spiridonov */
 		this.journal_periode = new Journal("Journal des périodes", this); 
 
+		
 		/** @author Guillaume Leroy */
 		this.stock = new Producteur3Stock();
 		this.stock.addStock(Feve.F_BQ , 250.0);
