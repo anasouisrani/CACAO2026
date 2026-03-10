@@ -158,6 +158,7 @@ public class Transformateur3Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p instanceof Feve) {
@@ -183,4 +184,13 @@ public class Transformateur3Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
+
+	public double demande(Feve f, double cours) {
+		if (this.stockFeves.get(f)<20000) {
+			return Math.max(20000-this.stockFeves.get(f),  10); // on n'achete jamais moins de 10T
+		}
+		return 0;
+	}
+
 }
