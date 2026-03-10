@@ -2,12 +2,14 @@ package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3Acteur implements IActeur {
@@ -107,6 +109,7 @@ public class Transformateur3Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return 0; // A modifier
@@ -114,4 +117,13 @@ public class Transformateur3Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
+
+	public double demande(Feve f, double cours) {
+		if (this.stockFeves.get(f)<20000) {
+			return Math.max(20000-this.stockFeves.get(f),  10); // on n'achete jamais moins de 10T
+		}
+		return 0;
+	}
+
 }
