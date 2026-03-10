@@ -79,7 +79,7 @@ public class Producteur2Acteur implements IActeur, IVendeurBourse {
 							   " depuis " + p.getParcelles() + " hectares");
 			}
 			// Vieillir la plantation
-			p.vieillir();
+			p.add_age();
 		}
 		
 		// Calcul du stock total

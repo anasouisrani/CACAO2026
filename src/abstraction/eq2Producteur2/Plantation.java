@@ -24,40 +24,40 @@ public class Plantation {
             case F_BQ:
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
-                this.productionParParcelle = 105 000 ; //  fèves par parcelle a chaque next
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
+                this.productionParParcelle = 105000 ; //  fèves par parcelle a chaque next
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
                 this.salaire_employe = 1800;
                 break;
  
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 3 ans
-                this.productionParParcelle = 85 000;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
+                this.productionParParcelle = 85000;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
                 this.salaire_employe = 1800;
                 break;
 
             case F_HQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
-                this.productionParParcelle = 63 000;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
+                this.productionParParcelle = 63000;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
                 this.salaire_employe = 1800;
                 break;
 
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 72; // 5 ans
-                this.productionParParcelle = 63 000 ;
-                this.prix_achat = ;
-                this.prix_vente = ;
-                this.prix_replantation = ;
+                this.productionParParcelle = 63000 ;
+                this.prix_achat = 0;
+                this.prix_vente = 0;
+                this.prix_replantation = 0;
                 this.salaire_employe = 1800;
                 break;
             
@@ -65,15 +65,6 @@ public class Plantation {
                 throw new IllegalArgumentException("Type de fève non reconnu !");
         }
     }
-
-
-
-    // Méthode pour vérifier si la plantation est productive
-    public boolean estProductive() {
-        return age >= tempsAvantProduction && age < dureeDeVie;
-    }
-
-
 
 
     /**
