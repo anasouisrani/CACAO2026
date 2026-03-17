@@ -1,5 +1,7 @@
 package abstraction.eq9Distributeur2;
 
+import java.util.List;
+
 public class Pseudo {
     
 
@@ -77,4 +79,51 @@ public class Pseudo {
     // - gererEncheres()
     // - negocierContratsCadres()
 
+
+
+    // Fidélité :
+    // Nous maintenons un fournisseur uniquement si cela nous apporte remises ou avantages,
+    // en nous basant sur l’historique des contrats, les remises obtenues et les prix concurrents,
+    // afin d’utiliser la fidélité comme levier de négociation.
+    
+    /** @author Paul Juhel */
+    public boolean garderFournisseur(Transformateur t, Produit produit, double quantite, HistoriqueContrats historique, List<Transformateur> concurrents) {
+        // Calcul du prix net actuel
+        double remiseHistorique = historique.getRemiseMoyenne(t, produit); 
+        double prixNetActuel = t.getPrix(produit, quantite) * (1 - remiseHistorique);
+
+        // Meilleur prix concurrent
+        double meilleurPrixConcurrent = Double.MAX_VALUE;
+        for (Transformateur c : concurrents) {
+            if (!c.equals(t)) {
+                double prixC = c.getPrix(produit, quantite);
+                meilleurPrixConcurrent = Math.min(meilleurPrixConcurrent, prixC);
+            }
+        }
+
+        // Si concurrent moins cher (>5%), changement
+        double diffRel = (prixNetActuel - meilleurPrixConcurrent) / meilleurPrixConcurrent;
+        if (diffRel > 0.05) {
+            return false;
+        }
+
+        // Calcul de l'avantage fidélité
+        double scoreFidelite = historique.getScoreFidelite(t, produit);
+        double avantageFidelite = scoreFidelite * 0.1;
+
+        // Avantage attendu par remise future
+        double remisePotentielle = historique.getRemisePotentielle(t, produit);
+
+        // Règle opportuniste : conserver si avantage de fidélité ou perspective de remise
+        if (remisePotentielle > 0.02) {
+            return true;
+        }
+        if (avantageFidelite > 0.05) {
+            return true;
+        }
+
+        // Sinon on conserve si l’écart est faible (≤3%) et l’historique est bon
+        return diffRel <= 0.03 && scoreFidelite >= 0.7;
     }
+
+}
