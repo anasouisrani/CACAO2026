@@ -9,15 +9,12 @@ import abstraction.eqXRomu.produits.Chocolat;
 
 public class Transformateur1Stock extends Transformateur1Acteur{
 
-    protected HashMap<IProduit, Double> stock;
-
-    
+    private HashMap<IProduit, Double> stock;
 
     public Transformateur1Stock(){
         super();
         this.stock=new HashMap<IProduit, Double>();
     }
-    
 
     public void initialiser(){
         this.stock.put(Feve.F_BQ,0.0);
@@ -69,10 +66,4 @@ public class Transformateur1Stock extends Transformateur1Acteur{
         if (this.getStock().containsKey(p));
         this.getStock().put(p,QuantiteEnT);
     }
-
-
-
-    }
-
-
-
+}
