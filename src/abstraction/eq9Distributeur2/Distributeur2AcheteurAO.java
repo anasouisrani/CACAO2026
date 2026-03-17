@@ -8,6 +8,9 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.List;
 
+    /**  
+	 * @author Anass Ouisrani
+     */
 public class Distributeur2AcheteurAO extends Distributeur2Acteur implements IAcheteurAO {
 
     //  recherche 
