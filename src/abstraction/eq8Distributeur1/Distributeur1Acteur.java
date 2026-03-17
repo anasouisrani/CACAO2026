@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -16,6 +17,9 @@ public class Distributeur1Acteur implements IActeur {
 	
 	protected Journal journal0;/** @author Ewen Landron */
 	protected Journal journal1;/** @author Alexandre Cornet */
+	protected Journal journal2;/** @author Alexandre Cornet */
+	protected Journal journal3;/** @author Alexandre Cornet */
+	protected Journal journal4;/** @author Alexandre Cornet */
 	protected Variable volumeStock;/** @author Alexandre Cornet */
 	protected HashMap<IProduit, Double> Rayon;/** @author Alexandre Cornet */
 	protected int cryptogramme;/** @author Alexandre Cornet */
@@ -30,6 +34,9 @@ public class Distributeur1Acteur implements IActeur {
 	public Distributeur1Acteur() {
 		this.journal0 = new Journal("Journal EQ8 étapes ", this);
 		this.journal1 = new Journal("Journal EQ8 Rayon ", this);
+		this.journal2 = new Journal("Journal EQ8 Stock ", this);
+		this.journal3 = new Journal("Journal EQ8 Actions ", this);
+		this.journal4 = new Journal("Journal EQ8 Frais ", this);
 		this.volumeStock=new Variable("EQ8 StockTotal", this); 
 		this.Rayon = new HashMap<IProduit, Double>(); 
 		this.Stock = new HashMap<IProduit, Double>();
@@ -62,18 +69,39 @@ public class Distributeur1Acteur implements IActeur {
 		 * @author Ewen Landron
          */ 
 	public void next() {
-		this.journal0.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
-		this.journal1.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
-		this.getvolumestock();
 		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
-		this.journal1.ajouter(AjoutenRayon(p.get(0), 100));
+		Banque b=Filiere.LA_FILIERE.getBanque();
+		Variable v=this.getvolumestock();
+		double v1=v.getValeur();
+		//JournalActions
+		this.journal3.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		this.journal3.ajouter(AjoutenRayon(p.get(0), 100));
+		this.journal3.ajouter(changerTailleRayon(0));
+		this.journal3.ajouter("----------------------------------------------");
+		//Journal Étapes
+		this.journal0.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		//Journal Rayon
+		this.journal1.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		this.journal1.ajouter("Taille du Rayon : "+this.TailleRayon+"T");
 		for (int i=0; i<p.size(); i++){
 			double q=this.getQuantiteEnRayon(p.get(i),this.cryptogramme);
 			this.journal1.ajouter(p.get(i)+" : "+q+"T");
 		}
 		this.journal1.ajouter("----------------------------------------------");
-		
-
+		//Journal Stock
+		this.journal2.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		for (int i=0; i<p.size(); i++){
+			double q=this.getQuantiteEnStock(p.get(i),this.cryptogramme);
+			this.journal2.ajouter(p.get(i)+" : "+q+"T");
+		}
+		this.journal2.ajouter("----------------------------------------------");
+		//Journal Frais
+		this.journal4.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		b.payerCout(this, this.cryptogramme, "Frais de Rayonnage", TailleRayon*0.01);
+		this.journal4.ajouter("Frais de Rayon : "+TailleRayon*0.01 +" €");
+		b.payerCout(this, this.cryptogramme, "Frais de Stockage", v1*0.01);
+		this.journal4.ajouter("Frais de Stockage : "+v1*0.01+" €");
+		this.journal4.ajouter("----------------------------------------------");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -99,6 +127,25 @@ public class Distributeur1Acteur implements IActeur {
 		}
 		return this.volumerayon;
 	}
+
+	/** @author Alexandre Cornet */
+	public String changerTailleRayon(double d){
+		this.TailleRayon+=d;
+		if(d>=0){
+			return ("La taille du rayon a été augmentée de "+d+"T");
+		}else{
+			d=-d;
+			double v=this.getvolumerayon();
+			if(this.TailleRayon<v){
+				this.TailleRayon+=d;
+				return("Il y a trop de quantité en rayon pour baisser la taille du rayon");
+			}else{
+				return ("La taille du rayon a été diminuée de "+d+"T");
+			}
+		}
+		
+	}
+
 
 	/** @author Alexandre Cornet */
 	public String AjoutenRayon(IProduit p ,double d){
@@ -144,6 +191,9 @@ public class Distributeur1Acteur implements IActeur {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal0);
 		res.add(this.journal1);
+		res.add(this.journal2);
+		res.add(this.journal3);
+		res.add(this.journal4);
 		return res;
 	}
 
