@@ -17,7 +17,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stock implemen
     /**@author Safta Yassine */ 
     public double demande(Feve f, double cours){
         if (f.getGamme()==Gamme.MQ && !f.isEquitable()) {
-			return 80; // on n'achete jamais moins de 10T
+			return 80; 
 		}
 		else{
             return 0;
