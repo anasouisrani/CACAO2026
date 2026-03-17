@@ -15,6 +15,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Distributeur1Acteur implements IActeur {
 	
 	protected Journal journal0;/** @author Ewen Landron */
+	protected Journal journal1;/** @author Alexandre Cornet */
 	protected Variable volumeStock;/** @author Alexandre Cornet */
 	protected HashMap<IProduit, Double> Rayon;/** @author Alexandre Cornet */
 	protected int cryptogramme;/** @author Alexandre Cornet */
@@ -22,20 +23,24 @@ public class Distributeur1Acteur implements IActeur {
 	protected double TailleRayon;/** @author Alexandre Cornet */
 	protected double volumerayon;/** @author Alexandre Cornet */
 
+	/**
+         * @author Alexandre Cornet
+		 * @author Ewen Landron
+         */ 
 	public Distributeur1Acteur() {
-		this.journal0 = new Journal("Journal Eq 8 numéro étape ", this);
-		this.volumeStock=new Variable("volumeStock", this); /** @author Alexandre Cornet */
-		this.Rayon = new HashMap<IProduit, Double>(); /** @author Alexandre Cornet */
-		this.Stock = new HashMap<IProduit,Double>();/** @author Alexandre Cornet */
-		this.TailleRayon = 100.0;/** @author Alexandre Cornet */
-		this.volumerayon = 0.0;/** @author Alexandre Cornet */
+		this.journal0 = new Journal("Journal EQ8 étapes ", this);
+		this.journal1 = new Journal("Journal EQ8 Rayon ", this);
+		this.volumeStock=new Variable("EQ8 StockTotal", this); 
+		this.Rayon = new HashMap<IProduit, Double>(); 
+		this.Stock = new HashMap<IProduit, Double>();
+		this.TailleRayon = 1000.0;
+		this.volumerayon = 0.0;
 	}
-	
+	/** @author Alexandre Cornet */
 	public void initialiser() {
-		/** @author Alexandre Cornet */
 		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
 		for (int i=0; i<p.size(); i++){
-			this.Stock.put((IProduit)(p.get(i)),200.0);
+			this.Stock.put((IProduit)(p.get(i)),500.0);
 			this.Rayon.put((IProduit)(p.get(i)),0.0);
 			this.volumeStock.ajouter(this,getQuantiteEnStock((IProduit)(p.get(i)),this.cryptogramme));
 		}
@@ -52,10 +57,23 @@ public class Distributeur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	/**
+         * @author Alexandre Cornet
+		 * @author Ewen Landron
+         */ 
 	public void next() {
-		this.journal0.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());/** @author Ewen Landron */
-		this.getvolumestock();/** @author Alexandre Cornet */
+		this.journal0.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		this.journal1.ajouter("Numéro de tour : " + Filiere.LA_FILIERE.getEtape());
+		this.getvolumestock();
+		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
+		this.journal1.ajouter(AjoutenRayon(p.get(0), 100));
+		for (int i=0; i<p.size(); i++){
+			double q=this.getQuantiteEnRayon(p.get(i),this.cryptogramme);
+			this.journal1.ajouter(p.get(i)+" : "+q+"T");
+		}
+		this.journal1.ajouter("----------------------------------------------");
+		
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -77,7 +95,7 @@ public class Distributeur1Acteur implements IActeur {
 		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
 		this.volumerayon=0.0;
 		for (int i=0; i<p.size(); i++){
-			this.volumerayon+=getQuantiteEnStock((IProduit)(p.get(i)),this.cryptogramme);
+			this.volumerayon+=getQuantiteEnRayon((IProduit)(p.get(i)),this.cryptogramme);
 		}
 		return this.volumerayon;
 	}
@@ -90,13 +108,13 @@ public class Distributeur1Acteur implements IActeur {
 		if(v+d>this.TailleRayon){
 			String  s="il n'y a pas assez de place dans le rayon";
 			return s;
-		}else if(q>d){
+		}else if(q<d){
 			String s="vous n'avez pas assez de stock pour ajouter cette quantité";
 			return s;
 		}else{
 			this.Rayon.put(p,f+d);
 			this.Stock.put(p,q-d);
-			String s="Vous avez ajouté le produit en rayon";
+			String s="Vous avez ajouté " + d + "T de " + p + " en rayon.";
 			return s;
 		}
 
@@ -125,6 +143,7 @@ public class Distributeur1Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal0);
+		res.add(this.journal1);
 		return res;
 	}
 
