@@ -29,13 +29,17 @@ public class Producteur1Planteur extends Producteur1Stock{
         return this. taille_totale;
     }
 
+    /**
+     * @author Théophile Trillat
+     */
     public void planter(Feve f, double taille){
-
+        Plantation newP = new Plantation(f, taille , Filiere.LA_FILIERE.getEtape());
+        this.plantations.add(newP);
     }
 
 
     public void couper(int i){
-        plantations.remove(i);
+        this.plantations.remove(i);
     }
 
 
