@@ -35,29 +35,34 @@ public class Producteur1Stock extends Producteur1Acteur{
         return this.totalStock;
     }
 
-    public double getHQStock(){
-        return this.HQ_Stock;
+    public double getStock(Feve f){
+        if(f == Feve.F_HQ){
+            return this.HQ_Stock;
+        }
+
+        else if(f == Feve.F_HQ_E){
+            return this.HQ_E_Stock;
+        }
+
+        else if(f == Feve.F_MQ){
+            return this.MQ_Stock;
+        }
+
+        else if(f == Feve.F_MQ_E){
+            return this.MQ_E_Stock;
+        }
+
+        else if(f == Feve.F_BQ){
+            return this.BQ_Stock;
+        }
+
+        else{
+            return this.BQ_E_Stock;
+        }
+
     }
 
-    public double getHQ_EStock(){
-        return this.HQ_E_Stock;
-    }
 
-    public double getMQStock(){
-        return this.MQ_Stock;
-    }
-
-    public double getMQ_EStock(){
-        return this.MQ_E_Stock;
-    }
-
-    public double getBQStock(){
-        return this.BQ_Stock;
-    }
-
-    public double getBQ_EStock(){
-        return this.BQ_E_Stock;
-    }
 
     public void changeStock(Feve f, double quantite){
         if(f == Feve.F_HQ){
