@@ -1,7 +1,7 @@
 
 package abstraction.eq1Producteur1;
 
-import java.util.HashMap;
+
 import java.util.List;
 
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
@@ -21,6 +21,7 @@ class Producteur1VendeurAuxEncheres extends Producteur1VendeurBourse implements 
         if(this.getStock(Feve.F_BQ)>=170){
             new MiseAuxEncheres(this, Feve.F_BQ , 170.0, true);
         };
+
 
         if(this.getStock(Feve.F_MQ)>=30){
             new MiseAuxEncheres(this, Feve.F_MQ , 30.0, true);
