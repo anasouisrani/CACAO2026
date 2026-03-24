@@ -38,9 +38,7 @@ public class Transformateur1Acteur implements IActeur, IFabricantChocolatDeMarqu
 	}
 	public List<String> getMarquesChocolat(){
 		List<String> ListeNoms= new ArrayList<String>();
-		for (ChocolatDeMarque Choco: this.getChocolatsProduits()){
-			ListeNoms.add(Choco.getMarque());
-		}
+		ListeNoms.add("ProntellaM");
 		return ListeNoms;
 	}
 	
