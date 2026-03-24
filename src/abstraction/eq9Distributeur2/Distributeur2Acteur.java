@@ -15,17 +15,13 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
+public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarque {
 	protected int cryptogramme;
 	protected Journal journal;
 	protected Map<IProduit, Double> stock;
 	protected Variable indicateurStockTotal;
 	protected Map<ChocolatDeMarque, Double> prixParProduit;
-    // Prix réalistes selon le document (en €/kg)
-    protected double prixBaseBQ = 12000.0;    // Bas de gamme
-    protected double prixBaseMQ = 16000.0;    // Milieu de gamme
-    protected double prixBaseHQ = 22000.0;    // Haut de gamme
-    // Capacité de rayon réaliste pour un distributeur (500 tonnes)
+    protected Map<ChocolatDeMarque, Double> prix;
     protected double capaciteRayonKg = 500000.0;
 
 	/**
@@ -57,27 +53,18 @@ public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
         this.indicateurStockTotal.setValeur(this, getStockTotal());
 
         // Initialisation des prix selon la qualité du chocolat
-        this.prixParProduit = new HashMap<>();
-        for (ChocolatDeMarque choco : Filiere.LA_FILIERE.getChocolatsProduits()) {
-            double prix = calculerPrixSelonQualite(choco);
-            this.prixParProduit.put(choco, prix);
-        }
+        this.prix = new HashMap<>();
 
         journal.ajouter("Initialisation terminée : " + produits.size() + " produits en stock");
     }
 
     /**
      * Calcule le prix selon la qualité du chocolat
-     * Stratégie : prix différenciés selon la qualité pour optimiser les marges
-     */
-    private double calculerPrixSelonQualite(ChocolatDeMarque choco) {
-        switch (choco.getChocolat()) {
-            case C_BQ: case C_BQ_E: return prixBaseBQ;
-            case C_MQ: case C_MQ_E: return prixBaseMQ;
-            case C_HQ: case C_HQ_E: return prixBaseHQ;
-            default: return prixBaseMQ; // Prix moyen par défaut
-        }
-    }
+     * 
+     * @author Anass Ouisrani
+	 */
+
+        
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ9";
@@ -165,24 +152,23 @@ public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
 	////////////////////////////////////////////////////////
 	//               En lien avec la Banque               //
 	////////////////////////////////////////////////////////
-
-	// Appelee en debut de simulation pour vous communiquer
-	// votre cryptogramme personnel, indispensable pour les
-	// transactions.
+    /**
+         * @author Paul Juhel
+         */
+	// Appelee en debut de simulation pour communiquer cryptogramme personnel
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
 
-	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
-	// afin de vous en informer.
+	// Appelee lorsqu'un acteur fait faillite 
+	
 	public void notificationFaillite(IActeur acteur) {
 		if (acteur != null) {
 			journal.ajouter("Information : " + acteur.getNom() + " a fait faillite");
 		}
 	}
 
-	// Apres chaque operation sur votre compte bancaire, cette
-	// operation est appelee pour vous en informer
+	//Nous informer apres chaque operation sur votre compte bancaire, 
 	public void notificationOperationBancaire(double montant) {
 		if (montant > 0) {
 			journal.ajouter("Crédit bancaire : +" + montant + "€");
@@ -191,7 +177,7 @@ public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
 		}
 	}
 
-	// Renvoie le solde actuel de l'acteur
+	// Renvoie le solde actuel 
 	protected double getSolde() {
 		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
 	}
@@ -200,7 +186,7 @@ public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
 	//        Pour la creation de filieres de test        //
 	////////////////////////////////////////////////////////
 
-	// Renvoie la liste des filieres proposees par l'acteur
+	// Renvoie la liste des filieres proposees 
 	public List<String> getNomsFilieresProposees() {
 		ArrayList<String> filieres = new ArrayList<String>();
 		return(filieres);
@@ -221,12 +207,25 @@ public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
 	////////////////////////////////////////////////////////
     //         IDistributeurChocolatDeMarque              //
     ////////////////////////////////////////////////////////
-	//// @author Anass Ouisrani
+	/**
+         * @author Anass Ouisrani et Paul Juhel
+         */
 
 @Override
     public double prix(ChocolatDeMarque choco) {
-        return prixParProduit.getOrDefault(choco, prixBaseMQ);
+    if (!prix.containsKey(choco)) {
+        switch (choco.getChocolat()) {
+            case C_HQ_E: return 26000.0;
+            case C_HQ:   return 22000.0;
+            case C_MQ_E: return 18000.0;
+            case C_MQ:   return 16000.0;
+            case C_BQ_E: return 14000.0;
+            case C_BQ:   return 12000.0;
+            default:     return 0.0;
+        }
     }
+    return prix.get(choco);
+}
 
 @Override
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {

@@ -27,13 +27,13 @@ public class Distributeur2AcheteurAO extends Distributeur2Acteur implements IAch
             //stock actuel
             double stockActuel = this.stock.getOrDefault(choco, 0.0);
             
-            // Seuil de sécurité réaliste : 100 tonnes minimum en stock
-            double seuilDeSecurite = 100000.0; // 100 tonnes = 100 000 kg
+            // Seuil de sécurité réaliste : 10 tonnes minimum en stock - Arbitraire à revoir
+            double seuilDeSecurite = 10000.0; 
             
             if (stockActuel < seuilDeSecurite) {
                 
-                // Quantité à acheter : viser 200 tonnes total en stock
-                double quantiteCible = 200000.0; // 200 tonnes
+                // Quantité à acheter : viser 50 tonnes total en stock
+                double quantiteCible = 50000.0; // 50 tonnes
                 double quantiteAcheter = quantiteCible - stockActuel;
                 
                 // Respecter la quantité minimum pour les appels d'offres
@@ -74,7 +74,7 @@ public class Distributeur2AcheteurAO extends Distributeur2Acteur implements IAch
             return 0.0;
         }
 
-        final double capaciteStock = 500000.0;
+        final double capaciteStock = 100000.0;
         final int COUVERTURE_STEPS = 6;
 
         int etape = Filiere.LA_FILIERE.getEtape();
