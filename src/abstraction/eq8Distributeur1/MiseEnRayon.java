@@ -9,7 +9,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class MiseEnRayon extends Approvisionnement {
+public class MiseEnRayon extends Approvisionnement2 {
 
     public MiseEnRayon() {
         super();
