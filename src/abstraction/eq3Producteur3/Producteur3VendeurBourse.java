@@ -31,6 +31,7 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stock.getStock(f), quantiteEnT);
 		this.stock.retireStock(f, retire);
+		this.mettreAJourIndicateurStock();
 		return retire;
 	}
 

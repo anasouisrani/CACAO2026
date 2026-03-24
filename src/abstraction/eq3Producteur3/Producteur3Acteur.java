@@ -16,7 +16,7 @@ public class Producteur3Acteur implements IActeur {
 	private Journal journal_periode;
 	protected int cryptogramme;
 	protected Producteur3Stock stock; 
-	private Variable StockTotal;
+	public Variable StockTotal;
 	public Plantation3 plantationeq3; 
 	
 
@@ -59,7 +59,7 @@ public class Producteur3Acteur implements IActeur {
 			// vente des feves par contrat, en bourse .... (à faire après avoir implémenter la classe)
 		}
 		// défi 2
-		this.StockTotal.setValeur(this,this.stock.getStockTotal(), cryptogramme); /** @author Guillaume Leroy */
+		this.mettreAJourIndicateurStock(); /** @author Guillaume Leroy */
 		//coût de stockage final des feves et impôt sur le nombre d'hectare
 		this.plantationeq3.nextStep();
 	}
@@ -78,6 +78,11 @@ public class Producteur3Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(this.StockTotal);
 		return res;
+	}
+
+	public void mettreAJourIndicateurStock() {
+		/** @author Guillaume Leroy */
+    	this.StockTotal.setValeur(this, this.stock.getStockTotal(), this.cryptogramme);
 	}
 
 	// Renvoie les parametres

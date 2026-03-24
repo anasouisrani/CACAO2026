@@ -90,7 +90,7 @@ public class Producteur3VendeurCC extends Producteur3VendeurBourse implements IV
         }
 
         this.stock.retireStock(f, aLivre);
-        
+        this.mettreAJourIndicateurStock();
         this.journalCC.ajouter("Livraison de " + aLivre + " tonnes de " + f + " à " + nomAcheteur);
         return aLivre;
     }
