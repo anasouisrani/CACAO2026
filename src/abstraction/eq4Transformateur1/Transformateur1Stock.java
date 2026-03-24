@@ -38,9 +38,6 @@ public class Transformateur1Stock extends Transformateur1Acteur{
     public double getStocksProduit(IProduit produit){
         return this.getStock().get(produit);
     }
-<<<<<<< HEAD
- 
-=======
 
     public double getTotalStocksFeves(){
         double totalstock=0;
@@ -58,7 +55,6 @@ public class Transformateur1Stock extends Transformateur1Acteur{
             totalstock+=this.getStocksProduit(choco);
         }
         return totalstock;
->>>>>>> a3f7cd93906f660acd7cc4fa6abbcbe1b1e2fbe0
     }
 
     public double getTotalStocks(){
