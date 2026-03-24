@@ -22,6 +22,7 @@ public class Distributeur1Acteur implements IActeur, IDistributeurChocolatDeMarq
 	protected Journal journal2;/** @author Alexandre Cornet */
 	protected Journal journal3;/** @author Alexandre Cornet */
 	protected Journal journal4;/** @author Alexandre Cornet */
+	protected Journal journal5;/** @author Ewen Landron */
 	protected Variable volumeStock;/** @author Alexandre Cornet */
 	protected HashMap<IProduit, Double> Rayon;/** @author Alexandre Cornet */
 	protected int cryptogramme;/** @author Alexandre Cornet */
@@ -29,7 +30,6 @@ public class Distributeur1Acteur implements IActeur, IDistributeurChocolatDeMarq
 	protected HashMap<IProduit, Double> Prix;/** @author Alexandre Cornet */
 	protected double TailleRayon;/** @author Alexandre Cornet */
 	protected double volumerayon;/** @author Alexandre Cornet */
-
 	/**
          * @author Alexandre Cornet
 		 * @author Ewen Landron
@@ -40,6 +40,7 @@ public class Distributeur1Acteur implements IActeur, IDistributeurChocolatDeMarq
 		this.journal2 = new Journal("Journal EQ8 Stock ", this);
 		this.journal3 = new Journal("Journal EQ8 Actions ", this);
 		this.journal4 = new Journal("Journal EQ8 Frais ", this);
+		this.journal5 = new Journal("Journal EQ8 Contrats ", this);
 		this.volumeStock=new Variable("EQ8 StockTotal", this); 
 		this.Rayon = new HashMap<IProduit, Double>(); 
 		this.Stock = new HashMap<IProduit, Double>();
@@ -171,9 +172,10 @@ public class Distributeur1Acteur implements IActeur, IDistributeurChocolatDeMarq
 			this.Rayon.put(p,f+d);
 			this.Stock.put(p,q-d);
 			String s="Vous avez ajouté " + d + "T de " + p + " en rayon.";
+			this.volumerayon+=d;
+			this.volumeStock.ajouter(this, -d);
 			return s;
 		}
-
 	}
 
 	public String getDescription() {

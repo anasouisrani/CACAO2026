@@ -5,12 +5,10 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 /** @author Ewen Landron */
-public class Approvisionnement {
+public class Approvisionnement extends Distributeur1Acteur {
 
-    private Distributeur1Acteur acteur;
-
-    public Approvisionnement(Distributeur1Acteur acteur) {
-        this.acteur = acteur;
+    public Approvisionnement() {
+        super();
     }
 
     /**
