@@ -15,7 +15,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarque {
+public class Distributeur2Acteur implements IDistributeurChocolatDeMarque {
 	protected int cryptogramme;
 	protected Journal journal;
 	protected Map<IProduit, Double> stock;
@@ -176,6 +176,7 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
 	////////////////////////////////////////////////////////
     //         IDistributeurChocolatDeMarque              //
     ////////////////////////////////////////////////////////
+	//// @author Anass Ouisrani
 
 @Override
     public double prix(ChocolatDeMarque choco) {
