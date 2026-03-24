@@ -8,6 +8,7 @@ import java.lang.Integer;
 
 import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -21,6 +22,7 @@ public class Transformateur2Acteur implements IActeur {
 	public static Double prix_MP;
 	protected SuperviseurVentesAuxEncheres superviseur;
 	protected SuperviseurVentesAO superviseurAO;
+	protected SuperviseurVentesContratCadre superviseurCC;
 
 	/** @author Pierre
     **/
@@ -33,12 +35,14 @@ public class Transformateur2Acteur implements IActeur {
 		this.Journaux.add(new Journal("Achat Enchère", this));
 		this.Journaux.add(new Journal("Achat Bourse", this));
 		this.Journaux.add(new Journal("Vente AO", this));
+		this.Journaux.add(new Journal("Achat AO", this));
 	}
 	
 	public void initialiser() {
 
 		superviseur =(SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
 		superviseurAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
+		superviseurCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 
 
 	}
@@ -58,7 +62,7 @@ public class Transformateur2Acteur implements IActeur {
 	/** @author Pierre
 	 */
 	public void next() {
-		for (int i = 0; i < 7; i++){
+		for (int i = 0; i < 8; i++){
 			this.Journaux.get(i).ajouter("Etape : "+ Integer.toString((Filiere.LA_FILIERE.getEtape()))+ "\n");
 		}
 	}

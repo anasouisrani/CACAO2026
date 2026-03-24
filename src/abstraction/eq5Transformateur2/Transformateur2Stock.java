@@ -81,6 +81,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     public void add_feve(Double n, Feve q){
         assert n >= 0;
         this.stock_feve.put(q, this.stock_feve.get(q) + n);
+        this.getJournaux().get(1).ajouter("Ajout de" + (n).toString()+ "de fève de qualité" + (q).toString() + "\n");
+
     }
 
     /** @author Pierre
@@ -89,6 +91,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         assert n <= 0;
         if (n <= this.stock_feve.get(q)){
             this.stock_feve.put(q, this.stock_feve.get(q) - n);
+            this.getJournaux().get(1).ajouter("Déstockage de" + (n).toString()+ "de fève de qualité" + (q).toString() + "\n");
+
         }
     }
 
@@ -97,6 +101,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     public void add_chocolat(Double n, Chocolat q){
         assert n >= 0;
         this.stock_chocolat.put(q, this.stock_chocolat.get(q) + n);
+        this.getJournaux().get(2).ajouter("Ajout de" + (n).toString()+ "de chocolat de qualité" + (q).toString() + "\n");
+
     }
 
     /** @author Raphaël
@@ -105,7 +111,9 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         assert n <= 0;
         if (n <= this.stock_chocolat.get(q)){
             this.stock_chocolat.put(q, this.stock_chocolat.get(q) - n); 
-            }
+            this.getJournaux().get(2).ajouter("Déstockage de" + (n).toString()+ "de chocolat de qualité" + (q).toString() + "\n");
+    
+        }
     }
 
 }
