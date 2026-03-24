@@ -4,7 +4,7 @@ import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 
 /**
  * Classe principale du Distributeur2
- * @author Paul Juhel
+ * @author Paul Rossignol
  */
 public class Distributeur2 extends Distributeur2AcheteurCC implements IAcheteurAO {
 
