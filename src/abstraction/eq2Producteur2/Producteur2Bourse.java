@@ -57,4 +57,10 @@ public class Producteur2Bourse extends Producteur2Acteur{
 		return offre;
 	}
 
+	public List<Journal> getJournaux() {
+		List<Journal> res = super.getJournaux();
+		res.add(journalBourse);
+		return res;
+	}
+
 }
