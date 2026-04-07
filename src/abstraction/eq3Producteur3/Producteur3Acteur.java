@@ -40,10 +40,6 @@ public class Producteur3Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
-		/** @author Guillaume Leroy */
-		this.stock.addStock(Feve.F_BQ , 250.0);
-		this.stock.addStock(Feve.F_MQ , 250.0);
-		this.stock.addStock(Feve.F_HQ , 250.0);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
