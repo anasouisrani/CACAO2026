@@ -2,6 +2,7 @@ package abstraction.eq3Producteur3;
 import abstraction.eq3Producteur3.Agriculteurs3;
 import abstraction.eqXRomu.filiere.Filiere;
 
+/** @author Guillaume Leroy*/
 public class Gestion_couts3 {
 
     public void nextCout(Producteur3Acteur acteur) {
