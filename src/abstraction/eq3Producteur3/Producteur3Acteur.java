@@ -16,15 +16,17 @@ public class Producteur3Acteur implements IActeur {
 	private Journal journal_periode;
 	protected int cryptogramme;
 	protected Producteur3Stock stock; 
-	private Variable StockTotal;
-	public Plantation3 plantationeq3; 
+	public Variable StockTotal;
+	public Plantation3 plantationeq3;
+	protected Journal journal_vente_bouse;
 	private Journal journal_stock;
 	
 
 	public Producteur3Acteur() {
 		/** @author Vassili Spiridonov */
 		this.journal_periode = new Journal("Journal des périodes EQ3", this); 
-		this.journal_stock = new Journal("Journal des Stocks EQ3", this);
+		this.journal_vente_bouse = new Journal("Journal Ventes en bourse EQ3", this);
+		this.journal_stock = new Journal("Journal des Stocks détaillé EQ3", this);
 
 
 		/** @author Guillaume Leroy */
@@ -57,14 +59,14 @@ public class Producteur3Acteur implements IActeur {
 		this.journal_periode.ajouter("période : "+ Filiere.LA_FILIERE.getEtape()); /** @author Vassili Spiridonov */
 		/** @author Guillaume Leroy */
 		for (Feve f : List.of(Feve.F_BQ, Feve.F_MQ, Feve.F_HQ)){
-			this.stock.addStock(f, this.plantationeq3.getProductionFeve(f));
+			this.stock.addStock(f, this.plantationeq3.getProductionFeve(f)); // ajoute le nouveau stock de fève et fait vieillir le restant
 			// vente des feves par contrat, en bourse .... (à faire après avoir implémenter la classe)
 		}
 		// défi 2
-		this.StockTotal.setValeur(this,this.stock.getStockTotal(), cryptogramme); /** @author Guillaume Leroy */
-		//coût de stockage final des feves et impôt sur le nombre d'hectare
-		this.plantationeq3.nextStep();
-		this.stock.journalRecap();
+		this.mettreAJourIndicateurStock(); /** @author Guillaume Leroy */
+		//fait payer le coût de stockage final des feves et impôt sur le nombre d'hectare de plantation
+		this.plantationeq3.nextStep(); // permet de gérer nos hectares de plantation pour la V1
+		this.stock.recapJournal();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -83,6 +85,11 @@ public class Producteur3Acteur implements IActeur {
 		return res;
 	}
 
+	public void mettreAJourIndicateurStock() {
+		/** @author Guillaume Leroy */
+    	this.StockTotal.setValeur(this, this.stock.getStockTotal(), this.cryptogramme);
+	}
+
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
@@ -94,6 +101,7 @@ public class Producteur3Acteur implements IActeur {
 		/** @author Vassili Spiridonov */
 		List<Journal> res=new ArrayList<Journal>(); 
 		res.add(this.journal_periode);
+		res.add(journal_vente_bouse);
 		res.add(journal_stock);
 		return res;
 	}

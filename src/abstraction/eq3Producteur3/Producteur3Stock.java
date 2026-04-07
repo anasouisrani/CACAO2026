@@ -2,16 +2,15 @@ package abstraction.eq3Producteur3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import java.util.List;
+import abstraction.eqXRomu.general.Journal;
 
 /** @author Guillaume Leroy */
 public class Producteur3Stock {
     private HashMap<Feve, List<Double>> stock;
-    private Journal journalStock; // Nouveau journal spécifique au stock
+    private Journal journalStock;
 
     public Producteur3Stock(Journal journal) {
         this.journalStock = journal;
@@ -63,8 +62,7 @@ public class Producteur3Stock {
         }
     }
 
-    public double getCoutStockage() {
-        double cout_stockage_tonne = 0; 
+    public double getCoutStockage(double cout_stockage_tonne) { 
         return this.getStockTotal() * cout_stockage_tonne;
     }
 
@@ -84,14 +82,15 @@ public class Producteur3Stock {
             liste.remove(48);
         }
     }
-    
-    public void journalRecap() {
+
+    public void recapJournal() {
         this.journalStock.ajouter("--- RÉCAPITULATIF DES STOCKS ---");
         for (Feve f : Feve.values()) {
             double total = this.getStock(f);
             if (total > 0) {
                 List<Double> lots = this.stock.get(f);
                 String detail = "";
+                // On parcourt les lots (indice 0 = plus récent)
                 for (int i = 0; i < lots.size(); i++) {
                     if (lots.get(i) > 0) {
                         detail = detail + "[Age " + i + ": " + lots.get(i) + "t] ";

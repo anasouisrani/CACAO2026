@@ -6,6 +6,7 @@ import abstraction.eqXRomu.acteurs.ProducteurXVendeurBourse;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
@@ -90,8 +91,8 @@ public class Producteur3VendeurCC extends Producteur3VendeurBourse implements IV
         }
 
         this.stock.retireStock(f, aLivre);
-        
-        this.journalCC.ajouter("Livraison de " + aLivre + " tonnes de " + f + " à " + nomAcheteur);
+        this.mettreAJourIndicateurStock();
+        this.journalCC.ajouter("période "+Filiere.LA_FILIERE.getEtape()+" : Livraison de " + aLivre + " tonnes de " + f + " à " + nomAcheteur);
         return aLivre;
     }
 
@@ -99,7 +100,7 @@ public class Producteur3VendeurCC extends Producteur3VendeurBourse implements IV
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) { return contrat.getPrix(); }
     
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        this.journalCC.ajouter("Nouveau contrat signé avec " + contrat.getAcheteur().getNom());
+        this.journalCC.ajouter("période "+Filiere.LA_FILIERE.getEtape()+ " : Nouveau contrat signé avec " + contrat.getAcheteur().getNom());
         this.contratsEnCours.add(contrat);
     }
 }
