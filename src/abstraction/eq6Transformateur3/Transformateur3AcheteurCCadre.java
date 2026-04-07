@@ -18,7 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 
-//*@author: Pol Bailleul */
+/**@author: Pol Bailleul */
 public class Transformateur3AcheteurCCadre extends Transformateur3AcheteurBourse implements IAcheteurContratCadre {
     private SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;

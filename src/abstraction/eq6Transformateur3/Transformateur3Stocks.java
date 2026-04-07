@@ -9,6 +9,9 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
+
+/**@author : Selma Ben Abdelkader */
+
 /**
  * Classe pour gérer les stocks de Transformateur3
  */

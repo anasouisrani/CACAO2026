@@ -18,6 +18,8 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eq6Transformateur3.StockFeve;
 import abstraction.eq6Transformateur3.StockChocolat;
 
+/**@author: Brevael Le Clezio */
+
 public class Transformateur3AcheteurBourse extends Transformateur3Acteur implements IAcheteurBourse {
 
     public Transformateur3AcheteurBourse() {
