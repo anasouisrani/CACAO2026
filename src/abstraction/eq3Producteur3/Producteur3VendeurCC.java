@@ -44,8 +44,8 @@ public class Producteur3VendeurCC extends Producteur3VendeurBourse implements IV
         //On identifie tous les acheteurs potentiels pour ce produit 
         List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
         
-        // On calcule une quantité à proposer (ex: 10% de ton stock par acheteur)
-        double quantiteTotaleVoulue = this.stock.getStock(f) * 0.1;
+        // On calcule une quantité à proposer (ex: 10% du stock par acheteur)
+        double quantiteTotaleVoulue = this.stock.getStock(f) * 0.3;
         double quantiteParStep = quantiteTotaleVoulue / 12; // Étallé sur 6 mois
 
         if (quantiteParStep >= 100.0) {
@@ -135,9 +135,16 @@ public class Producteur3VendeurCC extends Producteur3VendeurBourse implements IV
         return aLivre;
     }
 
-    public double propositionPrix(ExemplaireContratCadre contrat) { 
-        return 2000.0; 
-    }
+    public double propositionPrix(ExemplaireContratCadre contrat) {
+    double coutTotalCacao = this.gestionCouts.getCoutTot(this);
+    double productionTotale = this.plantationeq3.getProductionTotale();
+    double coutParTonne = coutTotalCacao / productionTotale;
+
+    //Fixer le prix avec 35% de marge (Prix = Coût + 35% du Coût)
+    double prixVente = coutParTonne * 1.35;
+
+    return prixVente;
+}
 
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         return contrat.getPrix(); 

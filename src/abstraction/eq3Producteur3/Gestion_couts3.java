@@ -21,4 +21,8 @@ public class Gestion_couts3 {
         acteur.journal_cout_periode.ajouter("Période " + Filiere.LA_FILIERE.getEtape() + " : coût main d'oeuvre = " + coutMO);
         Filiere.LA_FILIERE.getBanque().payerCout(acteur, acteur.cryptogramme, "Coût de la main d'oeuvre", coutMO);
     }
+    
+    public double getCoutTot(Producteur3Acteur acteur){
+        return acteur.plantationeq3.getNbHectareTotal() * 250 + acteur.stock.getCoutStockage(7.5) + acteur.agriculteurs.getCoutMainOeuvreTotal();
+    }
 }
