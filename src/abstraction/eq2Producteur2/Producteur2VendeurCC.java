@@ -61,7 +61,7 @@ public class Producteur2VendeurCC extends Producteur2Acteur implements IVendeurC
         }
     }
 
-    private double restantDu(Feve f) {
+    public double restantDu(Feve f) {
         double res = 0;
         for (ExemplaireContratCadre c : this.contratsEnCours) {
             if (c.getProduit().equals(f)) {
