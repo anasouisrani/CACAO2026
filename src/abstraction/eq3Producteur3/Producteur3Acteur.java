@@ -2,7 +2,6 @@ package abstraction.eq3Producteur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -17,20 +16,27 @@ public class Producteur3Acteur implements IActeur {
 	private Journal journal_periode;
 	protected int cryptogramme;
 	protected Producteur3Stock stock; 
-	private Variable StockTotal;
-	
+	public Variable StockTotal;
+	public Plantation3 plantationeq3;
+	protected Journal journal_vente_bouse;
+	private Journal journal_stock;
+	public Gestion_couts3 gestionCouts;
+	public Journal journal_cout_periode;
+	public Agriculteurs3 agriculteurs;
 
 	public Producteur3Acteur() {
 		/** @author Vassili Spiridonov */
-		this.journal_periode = new Journal("Journal des périodes", this); 
+		this.journal_periode = new Journal("Journal des périodes EQ3", this); 
+		this.journal_vente_bouse = new Journal("Journal Ventes en bourse EQ3", this);
+		this.journal_stock = new Journal("Journal des Stocks détaillé EQ3", this);
+		this.journal_cout_periode = new Journal("Journal des coûts par période", this);
 
-		
 		/** @author Guillaume Leroy */
-		this.stock = new Producteur3Stock();
-		this.stock.addStock(Feve.F_BQ , 250.0);
-		this.stock.addStock(Feve.F_MQ , 250.0);
-		this.stock.addStock(Feve.F_HQ , 250.0);
+		this.stock = new Producteur3Stock(this.journal_stock);
 		this.StockTotal= new VariableReadOnly(this + " Stock total", this, this.stock.getStockTotal());
+		this.plantationeq3= new Plantation3();
+		this.gestionCouts = new Gestion_couts3();
+		this.agriculteurs = new Agriculteurs3(this.plantationeq3);
 	}
 	
 	public void initialiser() {
@@ -50,8 +56,17 @@ public class Producteur3Acteur implements IActeur {
 
 	public void next() {
 		// défi 1 
-		this.journal_periode.ajouter("période : "+ Filiere.LA_FILIERE.getEtape());
-		this.StockTotal.setValeur(this,this.stock.getStockTotal(), cryptogramme);
+		this.journal_periode.ajouter("période : "+ Filiere.LA_FILIERE.getEtape()); /** @author Vassili Spiridonov */
+		/** @author Guillaume Leroy */
+		for (Feve f : List.of(Feve.F_BQ, Feve.F_MQ, Feve.F_HQ)){
+			this.stock.addStock(f, this.plantationeq3.getProductionFeve(f)); // ajoute le nouveau stock de fève et fait vieillir le restant
+			// vente des feves par contrat, en bourse .... (à faire après avoir implémenter la classe)
+		}
+		// défi 2
+		this.mettreAJourIndicateurStock(); /** @author Guillaume Leroy */
+		this.gestionCouts.nextCout(this);//fait payer le coût de stockage final des feves et impôt sur le nombre d'hectare de plantation
+		this.plantationeq3.nextStep(); // permet de gérer nos hectares de plantation pour la V1
+		this.stock.recapJournal();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -64,9 +79,15 @@ public class Producteur3Acteur implements IActeur {
 
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
+		/** @author Guillaume Leroy */
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(this.StockTotal);
 		return res;
+	}
+
+	public void mettreAJourIndicateurStock() {
+		/** @author Guillaume Leroy */
+    	this.StockTotal.setValeur(this, this.stock.getStockTotal(), this.cryptogramme);
 	}
 
 	// Renvoie les parametres
@@ -77,8 +98,12 @@ public class Producteur3Acteur implements IActeur {
 
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
+		/** @author Vassili Spiridonov */
+		List<Journal> res=new ArrayList<Journal>(); 
 		res.add(this.journal_periode);
+		res.add(journal_vente_bouse);
+		res.add(journal_stock);
+		res.add(journal_cout_periode);
 		return res;
 	}
 

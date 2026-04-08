@@ -113,6 +113,23 @@ public class Echeancier {
 		}
 	}
 
+		/**
+ 	* @return Retourne true si l'echeancier respecte les conditions du document des distributeurs
+ 	*/
+	public boolean echeancierAcceptable() {
+		double total = this.getQuantiteTotale();
+		if (total<100.0) {
+			return false;
+		}
+
+		for (Double d : quantites) {
+			if (d<total/(10*quantites.size())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * @param step
 	 * @return Retourne la somme des quantites prevues jusqu'a l'etape step incluse.

@@ -27,7 +27,7 @@ public class CtrlBtnFaillite implements ActionListener {
 				options,
 				options[0]);
 		if (choix==JOptionPane.YES_OPTION) {
-			Filiere.LA_FILIERE.getBanque().faireFaillite(this.acteur);
+			Filiere.LA_FILIERE.getBanque().faireFaillite(this.acteur, this,0);
 			boutonFaillite.setEnabled(false);
 		}
 	}

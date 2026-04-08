@@ -2,97 +2,115 @@
 
 package abstraction.eq4Transformateur1;
 
+import java.util.*;
+import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.acteurs.Romu;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-public class Transformateur1Stock {
+public class Transformateur1Stock extends Transformateur1Acteur implements IFabricantChocolatDeMarque, IMarqueChocolat{
 
-    protected double StocksFevesMQE; // La quantite totale de stock de fèves de moyenne qualité équitable
-    protected double StocksFevesHQE; // La quantite totale de stock de fèves de haute qualité équitable
-    protected double StocksFevesBQ; // La quantite totale de stock de fèves de basse qualité
-    protected double StocksFevesMQ; // La quantite totale de stock de fèves de moyenne qualité
-    protected double StocksFevesHQ; // La quantite totale de stock de fèves de haute qualité
-    protected double StocksFevesBQE; // La quantite totale de stock de fèves de basse qualité équitable
-    protected double StocksChocoBQ; // La quantite totale de stock de chocolat de basse qualité
-    protected double StocksChocoMQ; // La quantite totale de stock de chocolat de moyenne qualité
-    protected double StocksChocoHQ; // La quantite totale de stock de chocolat de haute qualité
-    protected double StocksChocoBQE; // La quantite totale de stock de chocolat de basse qualité équitable
-    protected double StocksChocoMQE; // La quantite totale de stock de chocolat de moyenne qualité équitable
-    protected double StocksChocoHQE; // La quantite totale de stock de chocolat de haute qualité équitable
-    
+    private HashMap<IProduit, Double> stock;
+    public ChocolatDeMarque ProntellaM= new ChocolatDeMarque(Chocolat.C_MQ, "ProntellaM", 65);
 
     public Transformateur1Stock(){
-        this.StocksFevesMQE= 0;
-        this.StocksFevesHQE= 0;
-        this.StocksFevesBQ= 0;
-        this.StocksFevesMQ= 0;
-        this.StocksFevesHQ= 0;
-        this.StocksFevesBQE= 0;
-        this.StocksChocoBQ= 0;
-        this.StocksChocoMQ= 0;
-        this.StocksChocoHQ= 0;
-        this.StocksChocoBQE=0;
-        this.StocksChocoMQE= 0;
-        this.StocksChocoHQE= 0;
+        super();
+        this.stock=new HashMap<IProduit, Double>();
     }
-    
-    public double getStocksFevesBQ(){
-        return this.StocksFevesBQ;
-    }
-    
-    public double getStocksFevesMQ(){
-        return this.StocksFevesMQ;
+    public List<ChocolatDeMarque> getChocolatsProduits(){
+		List<ChocolatDeMarque> ListeChoco=new ArrayList<ChocolatDeMarque>();
+		ListeChoco.add(ProntellaM);
+		return ListeChoco;
+	}
+	public List<String> getMarquesChocolat(){
+		List<String> ListeNoms= new ArrayList<String>();
+		ListeNoms.add("ProntellaM");
+		return ListeNoms;
+	}
+    public void initialiser(){
+        this.stock.put(Feve.F_BQ,0.0);
+        this.stock.put(Feve.F_MQ,0.0);
+        this.stock.put(Feve.F_HQ,0.0);
+        this.stock.put(Feve.F_BQ_E,0.0);
+        this.stock.put(Feve.F_MQ_E,0.0);
+        this.stock.put(Feve.F_HQ_E,0.0);
+        this.stock.put(Chocolat.C_BQ,0.0);
+        this.stock.put(Chocolat.C_MQ,0.0);
+        this.stock.put(Chocolat.C_HQ,0.0);
+        this.stock.put(Chocolat.C_BQ_E,0.0);
+        this.stock.put(Chocolat.C_MQ_E,0.0);
+        this.stock.put(Chocolat.C_HQ_E,0.0);
+        this.stock.put(ProntellaM,0.0);
+
     }
 
-    public double getStocksFevesHQ(){
-        return this.StocksFevesHQ;
-    }
-    
-    public double getStocksFevesBQE(){
-        return this.StocksFevesBQE;
-    }
-    
-    public double getStocksFevesMQE(){
-        return this.StocksFevesMQE;
+    public HashMap<IProduit, Double> getStock(){
+        return this.stock;
     }
 
-    public double getStocksFevesHQE(){
-        return this.StocksFevesHQE;
+    public double getStocksProduit(IProduit produit){
+        if (this.getStock().keySet().contains(produit)){
+        return this.getStock().get(produit);
     }
-
-    public double getStocksChocoBQ(){
-        return this.StocksChocoBQ;
-    }
-
-    public double getStocksChocoMQ(){
-        return this.StocksChocoMQ;
-    }
-
-    public double getStocksChocoHQ(){
-        return this.StocksChocoHQ;
-    }
-
-    public double getStocksChocoBQE(){
-        return this.StocksChocoBQE;
-    }
-
-    public double getStocksChocoMQE(){
-        return this.StocksChocoMQE;
-    }
-
-    public double getStocksChocoHQE(){
-        return this.StocksChocoHQE;
+        else{
+            return 0;
+        }
     }
 
     public double getTotalStocksFeves(){
-        return this.getStocksFevesBQ()+this.getStocksFevesMQ()+this.getStocksFevesHQ()+this.getStocksFevesBQE()+this.getStocksFevesMQE()+this.getStocksFevesHQE();
+        double totalstock=0;
+        for (IProduit feve: stock.keySet()){
+            if (feve.getType()=="Feve"){
+            totalstock+=this.getStocksProduit(feve);
+            }
+        }
+        return totalstock;
     }
 
     public double getTotalStocksChoco(){
-        return this.getStocksChocoBQ()+this.getStocksChocoMQ()+this.getStocksChocoHQ()+this.getStocksChocoBQE()+this.getStocksChocoMQE()+this.getStocksChocoHQE();
+        double totalstock=0;
+        for (IProduit choco: stock.keySet()){
+            if (choco.getType()=="Chocolat"){
+            totalstock+=this.getStocksProduit(choco);
+            }
+        }
+        return totalstock;
+    }
+
+    public double getTotalStocksChocoMarque(){
+        double totalstock=0;
+        for (IProduit choco: stock.keySet()){
+            if (choco.getType()=="ChocolatDeMarque"){
+            totalstock+=this.getStocksProduit(choco);
+        }
+        }
+        return totalstock;
     }
 
     public double getTotalStocks(){
-        return this.getTotalStocksChoco()+this.getTotalStocksFeves();
+        return this.getTotalStocksChoco()+this.getTotalStocksFeves()+this.getTotalStocksChocoMarque();
+    }
+
+   
+    public void setStocksProduit(IProduit p, double QuantiteEnT){
+        if (this.getStock().containsKey(p)){
+        this.getStock().put(p,QuantiteEnT);
+    }
     }
 
 
+    public void next(){
+        super.next();
+        
+
+        double F_MQ_ATransfo= this.getStocksProduit(Feve.F_MQ);
+        double ChocoObtenu= F_MQ_ATransfo/0.65;
+        this.setStocksProduit(Feve.F_MQ, this.getStocksProduit(Feve.F_MQ)-F_MQ_ATransfo);
+        this.setStocksProduit(ProntellaM, this.getStocksProduit(ProntellaM)+ChocoObtenu);
+    }
 }
