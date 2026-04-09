@@ -13,6 +13,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -23,13 +24,14 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     private HashMap<Chocolat, Double> stock_chocolat;
     private Variable stock_feve_affichage;
     private Variable stock_chocolat_affichage;
+    private Variable stock_ChocolatDeMarque_affichage;
     private List<SacDeFeves> sacsHQ;
     private List<SacDeFeves> sacsMQ;
     private List<SacDeFeves> sacsBQ;
     private List<SacDeFeves> sacsHQ_E;
     private List<SacDeFeves> sacsMQ_E;
     private List<SacDeFeves> sacsBQ_E;
-
+    private HashMap<ChocolatDeMarque,Double> stock_ChocolatDeMarque;
     
     // Constructeur
 
@@ -53,8 +55,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         this.stock_chocolat.put(Chocolat.C_HQ, 0.0);
         this.stock_chocolat.put(Chocolat.C_HQ_E, 0.0);
         
-        this.stock_feve_affichage=new Variable("EQ5 Stock Fève", this, 0);
-        this.stock_chocolat_affichage=new Variable("EQ5 Stock Chocloat", this, 0);
+        this.stock_feve_affichage=new Variable("EQ5 Stock Fève", this, 0.0);
+        this.stock_chocolat_affichage=new Variable("EQ5 Stock Chocloat", this, 0.0);
 
         this.sacsHQ=new LinkedList<SacDeFeves>();
         this.sacsMQ=new LinkedList<SacDeFeves>();
@@ -62,6 +64,14 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         this.sacsHQ_E=new LinkedList<SacDeFeves>();
         this.sacsMQ_E=new LinkedList<SacDeFeves>();
         this.sacsBQ_E=new LinkedList<SacDeFeves>();
+
+        this.stock_ChocolatDeMarque=new HashMap<ChocolatDeMarque,Double>();
+        if(this instanceof Transformateur2FabriquantChocolatDeMarque){
+            for (ChocolatDeMarque ChocoFerrara : ((Transformateur2FabriquantChocolatDeMarque)this).getChocolatsProduits()) {
+                this.stock_ChocolatDeMarque.put(ChocoFerrara, 0.0);
+            }
+        }
+        this.stock_ChocolatDeMarque_affichage=new Variable("EQ5 Stock Chocolat de marque",this,0.0);
     }
 
     // Méthodes
@@ -72,6 +82,7 @@ public class Transformateur2Stock extends Transformateur2Acteur{
 		List<Variable> res = super.getIndicateurs();
         res.add(this.stock_feve_affichage);
         res.add(this.stock_chocolat_affichage);
+        res.add(this.stock_ChocolatDeMarque_affichage);
 		return res;
 	}
 
@@ -217,11 +228,9 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         if (n <= this.stock_chocolat.get(q)){
             this.stock_chocolat.put(q, this.stock_chocolat.get(q) - n); 
             this.getJournaux().get(2).ajouter("Déstockage de" + (n).toString()+ "de chocolat de qualité" + (q).toString() + "\n");
-    
-        }
-            this.stock_chocolat.put(q, this.stock_chocolat.get(q) - n);
             this.stock_chocolat_affichage.retirer(this,n);
             }
+        }
 
         /**@author Maxence
         **/
@@ -252,6 +261,22 @@ public class Transformateur2Stock extends Transformateur2Acteur{
             }
             while(this.sacsBQ_E.get(0).getDatePeremption()==etape){
                 this.sacsBQ_E.remove(0);
+            }
+        }
+
+        /**@author Maxence */
+        public void add_chocolatDeMarque(ChocolatDeMarque choco, Double quantite){
+            this.stock_ChocolatDeMarque.put(choco, this.stock_ChocolatDeMarque.get(choco) + quantite);
+            this.stock_chocolat_affichage.ajouter(this,quantite);
+            this.getJournaux().get(2).ajouter("Ajout de" + (quantite).toString()+ "de chocolat de marque " + choco.getNom() + "\n");
+        }
+        /**@author Maxence */
+        public void remove_chocolatDeMarque(ChocolatDeMarque choco,Double n){
+        assert n >= 0;
+        if (n <= this.stock_ChocolatDeMarque.get(choco)){
+            this.stock_ChocolatDeMarque.put(choco, this.stock_ChocolatDeMarque.get(choco) - n); 
+            this.getJournaux().get(2).ajouter("Déstockage de" + (n).toString()+ "de chocolat de marque " + choco.getNom() + "\n");
+            this.stock_ChocolatDeMarque_affichage.retirer(this,n);
             }
         }
     }

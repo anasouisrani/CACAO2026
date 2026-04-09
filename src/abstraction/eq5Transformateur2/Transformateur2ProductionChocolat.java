@@ -47,4 +47,15 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
             }
         }
     }
+    /**@author Maxence 
+     * Notre Chocolat HQ a 100% de cacao, dont 70% de fèves HQ et 30% de fèves MQ
+    */
+    public void ProductionFerraraHQ(Double quantite){
+        Double quantiteFeveHQ=quantite*0.7;
+        Double quantiteFeveMQ=quantite*0.3;
+        if((quantiteFeveHQ<=this.getStock_chocolat(Chocolat.C_HQ)) && (quantiteFeveMQ<=this.getStock_chocolat(Chocolat.C_MQ))){
+            this.remove_feve(quantiteFeveHQ,Feve.F_HQ);
+            this.remove_feve(quantiteFeveMQ,Feve.F_MQ);
+        }
+    }
 }
