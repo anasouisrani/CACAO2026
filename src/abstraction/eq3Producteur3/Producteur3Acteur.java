@@ -20,7 +20,7 @@ public class Producteur3Acteur implements IActeur {
 	public Plantation3 plantationeq3;
 	protected Journal journal_vente_bouse;
 	private Journal journal_stock;
-	public Gestion_couts3 gestionCouts;
+	public GestionCouts3 gestionCouts;
 	public Journal journal_cout_periode;
 	public Agriculteurs3 agriculteurs;
 
@@ -35,7 +35,7 @@ public class Producteur3Acteur implements IActeur {
 		this.stock = new Producteur3Stock(this.journal_stock);
 		this.StockTotal= new VariableReadOnly(this + " Stock total", this, this.stock.getStockTotal());
 		this.plantationeq3= new Plantation3();
-		this.gestionCouts = new Gestion_couts3();
+		this.gestionCouts = new GestionCouts3();
 		this.agriculteurs = new Agriculteurs3(this.plantationeq3);
 	}
 	
