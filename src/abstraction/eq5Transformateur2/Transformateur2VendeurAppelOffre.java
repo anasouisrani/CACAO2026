@@ -6,13 +6,10 @@ import java.util.List;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
-import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat; 
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
@@ -26,13 +23,27 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AcheteurBou
     }
 
 	public OffreVente proposerVente(AppelDOffre offre){
+            IProduit p = offre.getProduit();
+            
+            // Si le produit n'est pas un chocolat de marque, on refuse
+            if (!(p instanceof ChocolatDeMarque)) {
+                return null;
+            }
+            
+            ChocolatDeMarque cdm = (ChocolatDeMarque) p;
+            
+            // On s'assure qu'on ne vend que NOTRE marque
+            if (!cdm.getNom().equals("Ferrara Rocher")) {
+                return null;
+            }
+
             OffreVente OV = new OffreVente(offre, this, offre.getProduit(),((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao"))).getCours(Feve.F_MQ).getValeur()*1.18*offre.getQuantiteT());
-			IProduit p = offre.getProduit();
-			Chocolat c = (Chocolat) p;
+			
+			Chocolat c = cdm.getChocolat();
 			Feve F;
 			if (c == Chocolat.C_BQ){
 				F = Feve.F_BQ;
-			} if (c == Chocolat.C_MQ) {
+			} else if (c == Chocolat.C_MQ) {
 				F = Feve.F_MQ;
 			} else {
 				F = Feve.F_HQ;
@@ -41,25 +52,11 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AcheteurBou
             return OV;
     }
 
-	
-	/**
-	 * Methode appelee lorsque la proposition de prix du vendeur a ete retenue 
-	 * par l'acheteur. La transaction d'argent a deja ete effectuee mais il reste 
-	 * au vendeur a mettre a jour ses stock pour tenir compte de l'achat qu'il
-	 * vient de faire ( propositionRetenue.getOffre() ).
-	 * @param propositionRetenue la proposition qu'a fait l'acheteur this et qui
-	 *  vient d'etre retenue par le vendeur.
-	 */
 	public void notifierVenteAO(OffreVente propositionRetenue){
         this.getJournaux().get(6).ajouter(propositionRetenue.toString()+ "\n");
     }
 
-	/**
-	 * Methode appelee pour avertir le vendeur que sa proposition de vente n'a pas ete retenue 
-	 * @param propositionRefusee, la proposition qui avait ete faite mais qui n'a pas ete retenue
-	 */
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee){
         this.getJournaux().get(6).ajouter(propositionRefusee.toString()+ "\n");
     }
 }
-    

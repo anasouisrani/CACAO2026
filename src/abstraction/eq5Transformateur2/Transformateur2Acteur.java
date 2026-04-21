@@ -15,6 +15,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur2Acteur implements IActeur {
 	

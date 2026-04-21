@@ -20,6 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2Stock extends Transformateur2Acteur{
 
     // Attributs
+    private HashMap<ChocolatDeMarque, Double> stock_ChocolatDeMarque;
     private HashMap<Feve, Double> stock_feve;
     private HashMap<Chocolat, Double> stock_chocolat;
     private Variable stock_feve_affichage;
@@ -31,7 +32,6 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     private List<SacDeFeves> sacsHQ_E;
     private List<SacDeFeves> sacsMQ_E;
     private List<SacDeFeves> sacsBQ_E;
-    private HashMap<String,Double> stock_ChocolatDeMarque;
     
     // Constructeur
 
@@ -65,10 +65,12 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         this.sacsMQ_E=new LinkedList<SacDeFeves>();
         this.sacsBQ_E=new LinkedList<SacDeFeves>();
 
-        this.stock_ChocolatDeMarque=new HashMap<String,Double>();
-        this.stock_ChocolatDeMarque.put("FerraraHQ", 0.0);
-        this.stock_ChocolatDeMarque.put("FerraraMQ", 0.0);
-        this.stock_ChocolatDeMarque.put("FerraraBQ", 0.0);
+        this.stock_ChocolatDeMarque = new HashMap<ChocolatDeMarque,Double>();
+        if(this instanceof Transformateur2FabriquantChocolatDeMarque){
+            for (ChocolatDeMarque choco : ((Transformateur2FabriquantChocolatDeMarque)this).getChocolatsProduits()) {
+                this.stock_ChocolatDeMarque.put(choco, 0.0);
+            }
+        }
         
         this.stock_ChocolatDeMarque_affichage=new Variable("EQ5 Stock Chocolat de marque",this,0.0);
     }
@@ -263,19 +265,31 @@ public class Transformateur2Stock extends Transformateur2Acteur{
             }
         }
 
-        /**@author Maxence */
-        public void add_chocolatDeMarque(String choco, Double quantite){
-            this.stock_ChocolatDeMarque.put(choco, this.stock_ChocolatDeMarque.get(choco) + quantite);
-            this.stock_chocolat_affichage.ajouter(this,quantite);
-            this.getJournaux().get(2).ajouter("Ajout de" + (quantite).toString()+ "de chocolat de marque " + choco + "\n");
-        }
-        /**@author Maxence */
-        public void remove_chocolatDeMarque(String choco,Double n){
+       /**@author Maxence */
+    public void add_chocolatDeMarque(ChocolatDeMarque choco, Double quantite){
+        Double stockActuel = this.getStock_chocolatDeMarque(choco);
+        this.stock_ChocolatDeMarque.put(choco, stockActuel + quantite);
+        this.stock_chocolat_affichage.ajouter(this, quantite);
+        this.getJournaux().get(2).ajouter("Ajout de " + quantite.toString() + " de chocolat de marque " + choco.getNom() + "\n");
+    }
+
+    /**@author Maxence */
+    public void remove_chocolatDeMarque(ChocolatDeMarque choco, Double n){
         assert n >= 0;
-        if (n <= this.stock_ChocolatDeMarque.get(choco)){
-            this.stock_ChocolatDeMarque.put(choco, this.stock_ChocolatDeMarque.get(choco) - n); 
-            this.getJournaux().get(2).ajouter("Déstockage de" + (n).toString()+ "de chocolat de marque " + choco + "\n");
-            this.stock_ChocolatDeMarque_affichage.retirer(this,n);
-            }
+        Double stockActuel = this.getStock_chocolatDeMarque(choco);
+        if (n <= stockActuel){
+            this.stock_ChocolatDeMarque.put(choco, stockActuel - n); 
+            this.getJournaux().get(2).ajouter("Déstockage de " + n.toString() + " de chocolat de marque " + choco.getNom() + "\n");
+            this.stock_ChocolatDeMarque_affichage.retirer(this, n);
         }
     }
+
+    /**@author Maxence */
+    public Double getStock_chocolatDeMarque(ChocolatDeMarque choco){
+        if (this.stock_ChocolatDeMarque.containsKey(choco)) {
+            return this.stock_ChocolatDeMarque.get(choco);
+        }
+        return 0.0;
+    }
+
+}

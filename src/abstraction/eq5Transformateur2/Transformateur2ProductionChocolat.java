@@ -18,6 +18,12 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
 
     }
 
+    @Override
+    public void next() {
+        super.next();
+        ProductionChocolat(Feve.F_BQ, 0.45, 8400.0);
+    }
+
     public void ProductionChocolat(Feve q, Double p, Double n){
         assert p >= 0.45;
         Double f = p * n;
@@ -27,7 +33,6 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
                 if (this.Occupation(n)){
                     this.remove_feve(f, q);
                     Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Achat de MP pour production de chocolat", prix_MP);
-                    this.addEncours(n);
                     // Calcul Quali
                     Double Q = 0.0;
                     if (q == Feve.F_BQ){

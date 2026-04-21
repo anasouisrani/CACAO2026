@@ -5,14 +5,10 @@ import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat; 
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
 /**
@@ -26,18 +22,17 @@ public class Transformateur2VendeurCC extends Transformateur2AchatAppelOffre imp
     }
 
 	public boolean vend(IProduit produit){
-		if (produit instanceof Chocolat){
-			Chocolat c = (Chocolat) produit;
-			if (c.isEquitable()){
+		if (produit instanceof ChocolatDeMarque){ // Modifié ici
+			ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
+			if (cdm.getChocolat().isEquitable()){ // On extrait le chocolat générique pour tester
 				return false;
 			} else {
-			return true;
+			    return true;
 			}
 		} else {
 			return false;
 		}
 	}
-	
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat){
 		return contrat.getEcheancier();
@@ -50,30 +45,33 @@ public class Transformateur2VendeurCC extends Transformateur2AchatAppelOffre imp
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat){
 		return ((contrat.getPrix() + contrat.getListePrix().get(contrat.getListePrix().size() - 2))/2)*1.20;
 	}
-	
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
 		this.getJournaux().get(4).ajouter(contrat.toString()+ "\n");
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
-		if (produit instanceof Chocolat){
-			Chocolat c = (Chocolat) produit;
+		if (produit instanceof ChocolatDeMarque){ // Modifié ici
+			ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
+			Chocolat c = cdm.getChocolat();
 			Feve F;
 			if (c == Chocolat.C_BQ){
 				F = Feve.F_BQ;
-			} if (c == Chocolat.C_MQ) {
+			} else if (c == Chocolat.C_MQ) {
 				F = Feve.F_MQ;
 			} else {
 				F = Feve.F_HQ;
 			}
-			if (this.getStock_chocolat(produit) >= quantite){
-				this.remove_chocolat(quantite, c);
+            
+            double stockDispo = this.getStock_chocolatDeMarque(cdm); // On regarde le bon stock
+			
+            if (stockDispo >= quantite){
+				this.remove_chocolatDeMarque(cdm, quantite);
 				return quantite;
 			} else {
-				this.ProductionChocolat(F,0.45,quantite - this.getStock_chocolat(produit));
-			this.remove_chocolat(this.getStock_chocolat(produit), c);
-			return quantite;
+				this.ProductionChocolat(F,0.45,quantite - stockDispo);
+			    this.remove_chocolatDeMarque(cdm, stockDispo);
+			    return stockDispo; // Correction : on ne peut renvoyer que ce qu'on livre vraiment
 			}
 		} else {
 			return 0;
