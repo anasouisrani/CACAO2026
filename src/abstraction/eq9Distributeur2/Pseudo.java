@@ -10,10 +10,6 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
  */
 public class Pseudo {
 
-    /**
-     * Action strategique des tetes de gondole.
-     * Cette classe place effectivement un produit en tete de gondole.
-     */
     public static class ActionTeteDeGondole {
         private static final double SEUIL_ATTRACTIVITE = 1.0;
         private static final double SEUIL_MARGE_MIN = 0.50; // marge unitaire minimale en euros
@@ -28,6 +24,7 @@ public class Pseudo {
          * @param volumeDisponible quantite que l'on peut mettre en rayon
          * @return true si le produit est effectivement place en tete de gondole
          */
+
         public boolean placerProduitEnTeteDeGondole(ChocolatDeMarque produit,
                                                     double prixAchat,
                                                     double prixVente,
@@ -58,7 +55,7 @@ public class Pseudo {
 
         /**
          * Selectionne et place le meilleur produit parmi une liste de candidats.
-         * Le score est base sur : marge * attractivite * volume.
+         * Le score est basé sur : marge * attractivite * volume.
          */
         public ChocolatDeMarque choisirEtPlacerMeilleurProduit(List<ChocolatDeMarque> produits,
                                                                 List<Double> prixAchats,
