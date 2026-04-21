@@ -12,7 +12,7 @@ public class Transformateur4Vente extends Transformateur4Production implements I
     
     @Override
     public boolean vend(IProduit produit) {
-        return produit instanceof Chocolat || produit instanceof ChocolatDeMarque;
+        return produit instanceof Chocolat; // On ne vend que du chocolat de base, pas de marques
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Transformateur4Vente extends Transformateur4Production implements I
                 this.StockChoco_HQ.retirer(this, quantiteLivree);
             }
             // Pour ChocolatDeMarque, il faudrait gérer séparément, mais pour l'instant on ignore
-            this.journal.ajouter("Livraison de " + quantiteLivree + " tonnes de " + produit.getNom());
+            this.journal.ajouter("Livraison de " + quantiteLivree + " tonnes de " + produit.toString());
         }
         return quantiteLivree;
     }
