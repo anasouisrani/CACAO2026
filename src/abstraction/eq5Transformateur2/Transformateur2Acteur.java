@@ -21,7 +21,7 @@ public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	private List<Journal> Journaux;
-	public static Double prix_MP = 0.5;
+	public static Double prix_MP=30000.0;
 	protected SuperviseurVentesAuxEncheres superviseur;
 	protected SuperviseurVentesAO superviseurAO;
 	protected SuperviseurVentesContratCadre superviseurCC;

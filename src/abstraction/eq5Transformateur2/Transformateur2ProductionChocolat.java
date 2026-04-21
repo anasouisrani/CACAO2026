@@ -1,6 +1,7 @@
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -53,14 +54,39 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
         }
     }
     /**@author Maxence 
-     * Notre Chocolat HQ a 100% de cacao, dont 70% de fèves HQ et 30% de fèves MQ
+     * Notre Chocolat HQ a 100% de cacao, dont 49% de fèves HQ et 51% de fèves MQ
     */
     public void ProductionFerraraHQ(Double quantite){
-        Double quantiteFeveHQ=quantite*0.7;
-        Double quantiteFeveMQ=quantite*0.3;
+        Double quantiteFeveHQ=quantite*0.49;
+        Double quantiteFeveMQ=quantite*0.51;
         if((quantiteFeveHQ<=this.getStock_chocolat(Chocolat.C_HQ)) && (quantiteFeveMQ<=this.getStock_chocolat(Chocolat.C_MQ))){
             this.remove_feve(quantiteFeveHQ,Feve.F_HQ);
             this.remove_feve(quantiteFeveMQ,Feve.F_MQ);
+            this.add_chocolatDeMarque("FerraraHQ",quantite);
         }
+    }
+/** @author Maxence
+* notre chocolat MQ a 100% de cacao, dont 26% de fèves MQ et 74% de fèves BQ
+ */
+    public void ProductionFerraraMQ(Double quantite){
+        Double quantiteFeveMQ=quantite*0.26;
+        Double quantiteFeveBQ=quantite*0.74;
+        if((quantiteFeveMQ<=this.getStock_chocolat(Chocolat.C_MQ)) && (quantiteFeveBQ<=this.getStock_chocolat(Chocolat.C_BQ))){
+            this.remove_feve(quantiteFeveMQ,Feve.F_MQ);
+            this.remove_feve(quantiteFeveBQ,Feve.F_BQ);
+            this.add_chocolatDeMarque("FerraraMQ",quantite);
+        }
+    }
+/** @author Maxence
+* notre chocolat BQ a 45% de cacao
+ */
+    public void ProductionFerraraBQ(Double quantite){
+        Double quantiteFeveBQ=quantite*0.45;
+        Double quantiteMP=quantite*0.65;
+        if(quantiteFeveBQ<=this.getStock_chocolat(Chocolat.C_BQ)){
+            this.remove_feve(quantiteFeveBQ,Feve.F_BQ);
+            this.add_chocolatDeMarque("FerraraBQ",quantite);
+        }
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Achat de MP pour production de chocolat FerraraBQ", quantiteMP*prix_MP);
     }
 }

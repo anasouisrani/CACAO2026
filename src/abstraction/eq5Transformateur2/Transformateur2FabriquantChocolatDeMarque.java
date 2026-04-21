@@ -14,9 +14,9 @@ public class Transformateur2FabriquantChocolatDeMarque extends Transformateur2Ma
         ChocolatDeMarque FerraraHQ = new ChocolatDeMarque(Chocolat.C_HQ,"Ferrara Rocher", 100);
         ChocolatDeMarque FerraraMQ = new ChocolatDeMarque(Chocolat.C_MQ,"Ferrara Rocher", 100);
         ChocolatDeMarque FerraraBQ = new ChocolatDeMarque(Chocolat.C_BQ,"Ferrara Rocher", 100);
-        liste.add(FerraraBQ);
-        liste.add(FerraraMQ);
         liste.add(FerraraHQ);
+        liste.add(FerraraMQ);
+        liste.add(FerraraBQ);
         return liste;
     }
 
