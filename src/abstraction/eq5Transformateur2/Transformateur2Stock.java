@@ -47,16 +47,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         this.stock_feve.put(Feve.F_MQ_E, 0.0);
         this.stock_feve.put(Feve.F_HQ, 0.0);
         this.stock_feve.put(Feve.F_HQ_E, 0.0);
-        this.stock_chocolat = new HashMap<Chocolat, Double>();
-        this.stock_chocolat.put(Chocolat.C_BQ, 0.0);
-        this.stock_chocolat.put(Chocolat.C_BQ_E, 0.0);
-        this.stock_chocolat.put(Chocolat.C_MQ, 0.0);
-        this.stock_chocolat.put(Chocolat.C_MQ_E, 0.0);
-        this.stock_chocolat.put(Chocolat.C_HQ, 0.0);
-        this.stock_chocolat.put(Chocolat.C_HQ_E, 0.0);
-        
+
         this.stock_feve_affichage=new Variable("EQ5 Stock Fève", this, 0.0);
-        this.stock_chocolat_affichage=new Variable("EQ5 Stock Chocloat", this, 0.0);
 
         this.sacsHQ=new LinkedList<SacDeFeves>();
         this.sacsMQ=new LinkedList<SacDeFeves>();
@@ -82,7 +74,6 @@ public class Transformateur2Stock extends Transformateur2Acteur{
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = super.getIndicateurs();
         res.add(this.stock_feve_affichage);
-        res.add(this.stock_chocolat_affichage);
         res.add(this.stock_ChocolatDeMarque_affichage);
 		return res;
 	}
@@ -93,23 +84,13 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         return this.stock_feve.get(Feve.F_BQ) + this.stock_feve.get(Feve.F_BQ_E) + this.stock_feve.get(Feve.F_MQ) + this.stock_feve.get(Feve.F_MQ_E) + this.stock_feve.get(Feve.F_HQ) + this.stock_feve.get(Feve.F_HQ_E);
         }
     
-    /** @author Pierre
-    **/
-    public Double getStock_chocolat_total(){
-        return this.stock_chocolat.get(Chocolat.C_BQ) + this.stock_chocolat.get(Chocolat.C_BQ_E) + this.stock_chocolat.get(Chocolat.C_MQ) + this.stock_chocolat.get(Chocolat.C_MQ_E) + this.stock_chocolat.get(Chocolat.C_HQ) + this.stock_chocolat.get(Chocolat.C_HQ_E);
-    }
     /**
      * @author Maxence
      */
     public Double getStock_feve(IProduit q){
         return this.stock_feve.get(q);
     }
-    /**
-     * @author Maxence
-     */
-    public Double getStock_chocolat(IProduit q){
-        return this.stock_chocolat.get(q);
-    }
+
     /** @author Pierre et Maxence
      * 
     **/
@@ -213,26 +194,6 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         }       
     }
 
-    /** @author Raphaël et Maxence
-    **/
-    public void add_chocolat(Double n, Chocolat q){
-        assert n >= 0;
-        this.stock_chocolat.put(q, this.stock_chocolat.get(q) + n);
-        this.getJournaux().get(2).ajouter("Ajout de" + (n).toString()+ "de chocolat de qualité" + (q).toString() + "\n");
-        this.stock_chocolat_affichage.ajouter(this,n);
-    }
-
-    /** @author Raphaël et Maxence
-    **/
-    public void remove_chocolat(Double n, Chocolat q){
-        assert n >= 0;
-        if (n <= this.stock_chocolat.get(q)){
-            this.stock_chocolat.put(q, this.stock_chocolat.get(q) - n); 
-            this.getJournaux().get(2).ajouter("Déstockage de" + (n).toString()+ "de chocolat de qualité" + (q).toString() + "\n");
-            this.stock_chocolat_affichage.retirer(this,n);
-            }
-        }
-
         /**@author Maxence
         **/
         public void update_peremption(){
@@ -269,7 +230,7 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     public void add_chocolatDeMarque(ChocolatDeMarque choco, Double quantite){
         Double stockActuel = this.getStock_chocolatDeMarque(choco);
         this.stock_ChocolatDeMarque.put(choco, stockActuel + quantite);
-        this.stock_chocolat_affichage.ajouter(this, quantite);
+        this.stock_ChocolatDeMarque_affichage.ajouter(this, quantite);
         this.getJournaux().get(2).ajouter("Ajout de " + quantite.toString() + " de chocolat de marque " + choco.getNom() + "\n");
     }
 

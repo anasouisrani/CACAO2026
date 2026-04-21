@@ -21,41 +21,20 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
     @Override
     public void next() {
         super.next();
-        ProductionChocolat(Feve.F_BQ, 0.45, 8400.0);
+        ProductionChocolat(Chocolat.C_BQ, 2000.0);
+        ProductionChocolat(Chocolat.C_MQ, 1500.0);
+        ProductionChocolat(Chocolat.C_HQ, 500.0);
     }
 
-    public void ProductionChocolat(Feve q, Double p, Double n){
-        assert p >= 0.45;
-        Double f = p * n;
-        if ( f <= this.getStock_feve(q) ){
-            Double a = n * (1 - p) * prix_MP;
-            if ( a <= this.getSolde()){
-                if (this.Occupation(n)){
-                    this.remove_feve(f, q);
-                    Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Achat de MP pour production de chocolat", prix_MP);
-                    // Calcul Quali
-                    Double Q = 0.0;
-                    if (q == Feve.F_BQ){
-                        Q = p + 3 * 0.45;
-                    } else if (q == Feve.F_MQ){
-                        Q = p + 3 * 0.75;
-                    } else if (q == Feve.F_HQ){
-                        Q = p + 3;
-                    } 
-                    if ( 3.575 <= Q && p >= 0.80 ){
-                        ChocolatDeMarque chocoHQ = new ChocolatDeMarque(Chocolat.C_HQ, "Ferrara Rocher", 100);
-                        this.add_chocolatDeMarque(chocoHQ, n);
-                        
-                    } else if ( 2.58 <= Q && p >= 0.60 ){
-                        ChocolatDeMarque chocoMQ = new ChocolatDeMarque(Chocolat.C_MQ, "Ferrara Rocher", 100);
-                        this.add_chocolatDeMarque(chocoMQ, n);
-                        
-                    } else {
-                        ChocolatDeMarque chocoBQ = new ChocolatDeMarque(Chocolat.C_BQ, "Ferrara Rocher", 45); 
-                        this.add_chocolatDeMarque(chocoBQ, n);
-                    }
-                }
-            }
+    public void ProductionChocolat(Chocolat c,Double n){
+        if(c==Chocolat.C_HQ){
+            ProductionFerraraHQ(n);
+        }
+        else if(c==Chocolat.C_MQ){
+            ProductionFerraraMQ(n);
+        }
+        else if(c==Chocolat.C_BQ){
+            ProductionFerraraBQ(n);
         }
     }
 
@@ -92,7 +71,7 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
     public void ProductionFerraraBQ(Double quantite){
         Double quantiteFeveBQ=quantite*0.45;
         Double quantiteMP=quantite*0.65;
-        if(quantiteFeveBQ<=this.getStock_chocolat(Chocolat.C_BQ)){
+        if(quantiteFeveBQ<=this.getStock_feve(Feve.F_BQ)){
             ChocolatDeMarque chocoBQ = new ChocolatDeMarque(Chocolat.C_BQ, "Ferrara Rocher", 100);
             this.add_chocolatDeMarque(chocoBQ, quantite);
         }

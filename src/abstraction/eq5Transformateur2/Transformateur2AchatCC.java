@@ -93,9 +93,7 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 	 * 
 	 * @param contrat
 	 */
-	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
-		this.getJournaux().get(3).ajouter(contrat.toString()+ "\n");
-	}
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){}
 
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre afin de notifier

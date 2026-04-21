@@ -40,15 +40,7 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AchatAppelO
             OffreVente OV = new OffreVente(offre, this, offre.getProduit(),((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao"))).getCours(Feve.F_MQ).getValeur()*1.18*offre.getQuantiteT());
 			
 			Chocolat c = cdm.getChocolat();
-			Feve F;
-			if (c == Chocolat.C_BQ){
-				F = Feve.F_BQ;
-			} else if (c == Chocolat.C_MQ) {
-				F = Feve.F_MQ;
-			} else {
-				F = Feve.F_HQ;
-			}
-			this.ProductionChocolat(F, 0.65, offre.getQuantiteT());
+			this.ProductionChocolat(c, offre.getQuantiteT());
             return OV;
     }
 
