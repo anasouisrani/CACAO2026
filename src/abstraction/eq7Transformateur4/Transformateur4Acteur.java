@@ -155,6 +155,7 @@ public class Transformateur4Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	//Matteo
 	public Variable get_StockChoco_HQ(){
 		return this.StockChoco_HQ;
 	}
@@ -165,6 +166,18 @@ public class Transformateur4Acteur implements IActeur {
 
 	public Variable get_StockChoco_BQ(){
 		return this.StockChoco_BQ;
+	}
+
+	public Variable get_LQ(){
+		return this.LQ;
+	}
+
+	public Variable get_MQ(){
+		return this.MQ;
+	}
+
+	public Variable get_HQ(){
+		return this.HQ;
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
