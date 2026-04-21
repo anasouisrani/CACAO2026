@@ -29,7 +29,7 @@ public class Transformateur3AcheteurCCadre extends Transformateur3AcheteurBourse
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(" journal Contrat Cadre EQ6", this);
+		this.journalCC = new Journal(" Journal Acheteur Contrat Cadre EQ6", this);
 	}
 
 	public void initialiser() {
