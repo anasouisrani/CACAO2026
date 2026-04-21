@@ -86,6 +86,9 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1AcheteurCC
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
+		this.setStocksProduit(cm,this.getStocksProduit(cm)+quantite);
+		this.setStocksPrevuProduit(cm,this.getStocksPrevuProduit(cm)+quantite);
+
 	}
 
 
