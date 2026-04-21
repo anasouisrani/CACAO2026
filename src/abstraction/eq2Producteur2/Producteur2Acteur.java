@@ -13,7 +13,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 
-public class Producteur2Acteur extends Producteur2Stock implements IActeur, IVendeurBourse {
+public class Producteur2Acteur extends Producteur2couts implements IActeur, IVendeurBourse {
 	/** @author Thomas */
 	protected HashMap<Feve, Variable> stocks;
 	protected HashMap<Feve,Double> fevesSeches;
@@ -22,7 +22,6 @@ public class Producteur2Acteur extends Producteur2Stock implements IActeur, IVen
 	protected Journal journalBourse = new Journal("Journal Bourse Eq2", this);
 	protected Journal journalContratCadre = new Journal("Journal Contrat Cadre Eq2", this);
 	protected List<Plantation> plantations;
-	protected Producteur2couts stockManager;
 
 	/** @author Thomas */
 	public Producteur2Acteur() {
@@ -33,9 +32,10 @@ public class Producteur2Acteur extends Producteur2Stock implements IActeur, IVen
 		}
 		this.stockTotal = new Variable("Stock Total EQ2", this, 0.0);
 		this.plantations = new ArrayList<Plantation>();
-		this.stockManager = new Producteur2couts();
+		// Initialiser le journal des coûts avec l'acteur correct
+		this.JournalCout = new Journal("Journal Coûts Eq2", this);
 		for (Feve f : Feve.values()) {
-			this.stocks.get(f).setValeur(this, this.stockManager.stock_initial.get(f));
+			this.stocks.get(f).setValeur(this, this.stock_initial.get(f));
 		}
 	}
 	
@@ -175,19 +175,19 @@ public class Producteur2Acteur extends Producteur2Stock implements IActeur, IVen
 			return 0.0;
 		}
 
-		this.stockManager.setStockMin(0.1);
+		this.setStockMin(0.1);
 
 		double offre = 0;
-		if (this.stockvar.containsKey(f) && this.stockManager.cout_unit_t.containsKey(f) && this.stockManager.seuil_stock.containsKey(f)) {
+		if (this.stockvar.containsKey(f) && this.cout_unit_t.containsKey(f) && this.seuil_stock.containsKey(f)) {
 			double stockActuel = this.stockvar.get(f).getValeur();
 			double quantiteAGarder = this.restantDu(f);
 			double marge = 1.2;
-			double prixMinimal = this.stockManager.cout_unit_t.get(f) * marge;
+			double prixMinimal = this.cout_unit_t.get(f) * marge;
 
-			this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape() + " : Cours=" + cours + ", seuil=" + this.stockManager.seuil_stock.get(f) + ", stock=" + stockActuel);
+			this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape() + " : Cours=" + cours + ", seuil=" + this.seuil_stock.get(f) + ", stock=" + stockActuel);
 
-			if ((stockActuel - quantiteAGarder > this.stockManager.seuil_stock.get(f)) && (prixMinimal < cours)) {
-				offre = stockActuel - quantiteAGarder - this.stockManager.seuil_stock.get(f);
+			if ((stockActuel - quantiteAGarder > this.seuil_stock.get(f)) && (prixMinimal < cours)) {
+				offre = stockActuel - quantiteAGarder - this.seuil_stock.get(f);
 				this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape() + " : Je mets en vente " + offre + " T de " + f + " à " + cours + " €/t (prix mini=" + prixMinimal + ")");
 			}
 		}

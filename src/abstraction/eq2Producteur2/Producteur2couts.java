@@ -10,11 +10,12 @@ import abstraction.eqXRomu.filiere.Filiere;
 /** @author Thomas */
 public class Producteur2couts extends Producteur2Stock {
     protected HashMap<Feve, Double> cout_unit_t;
-    private Journal JournalCout;
+    protected Journal JournalCout;
 
     public Producteur2couts() {
         super();
         this.cout_unit_t = new HashMap<Feve, Double>();
+        this.JournalCout = new Journal("Journal Coûts Eq2", null);
 
         for (Feve f : Feve.values()) {
             this.cout_unit_t.put(f, 0.0);

@@ -9,12 +9,11 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-
 import java.util.LinkedList;
 import java.util.List;
 
 /** @author Thomas */
-public class Producteur2VendeurCC extends Producteur2Acteur implements IVendeurContratCadre {
+public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurContratCadre {
 
     private SuperviseurVentesContratCadre supCC;
     private List<ExemplaireContratCadre> contratsEnCours;
