@@ -154,22 +154,6 @@ public class Transformateur3Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
-/*<<<<<<< HEAD
-	public Transformateur3Stocks getStocks() {
-		return this.stocks;
-	}
-
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			if (this.stocks != null) {
-				return this.stocks.getQuantiteEnStock(p);
-			} else {
-				return 0.0;
-			}
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-
-*/
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme!=cryptogramme) { // Les acteurs non assermentes n'ont pas a connaitre notre stock
 			return 0;

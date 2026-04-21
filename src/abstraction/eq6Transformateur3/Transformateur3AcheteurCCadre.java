@@ -40,7 +40,7 @@ public class Transformateur3AcheteurCCadre extends Transformateur3AcheteurBourse
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("Etape"+Filiere.LA_FILIERE.getEtape());
-				for (Feve f : stockFeve.getFeves()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+				for (Feve f : stockFeve.getFeves()) {
 					if (true) { 
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeve.getQuantite(f)-restantDu(f))/12); // au moins 100
