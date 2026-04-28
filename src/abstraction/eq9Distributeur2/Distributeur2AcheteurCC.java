@@ -16,12 +16,6 @@ import java.util.LinkedList;
  * @author Paul Juhel et Paul ROSSIGNOL
  */
 
-
-/**
-* PB A FIXER : Réaprovisionnement automatique sans condition d acceptation du CC,
-*/
-
-
 public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements IAcheteurContratCadre {
 
     // Superviseur des contrats cadres
@@ -75,7 +69,9 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
             }
             // Frais de stockage : 120 €/T par étape (16x le coût producteur de 7.5€/T)
             payerFraisStockage();
+            // --- V2 : Ajustement dynamique des prix de vente ---
             ajusterPrixDynamiques();
+            fairePropositionCC();
         }
 
         this.indicateurStockTotal.setValeur(this, getStockTotal());
