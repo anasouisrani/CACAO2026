@@ -17,7 +17,6 @@ import java.util.LinkedList;
 
 public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncheres implements IVendeurContratCadre{
 	private HashMap<Feve , Double > pourcentageAVendre = new HashMap<Feve , Double>();
-	protected int periode = 8 ;
 	private SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
@@ -75,7 +74,8 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat){
         return contrat.getEcheancier();
     }
-	
+
+
 	/**
 	 * Methode appele par le SuperviseurVentesContratCadre apres une negociation reussie
 	 * sur l'echeancier afin de connaitre le prix a la tonne que le vendeur propose.
@@ -131,6 +131,44 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
     }
 
 
+	/////////////////////////////////////////
+	//         Demande de contracts        //
+	/////////////////////////////////////////
+
+	public void initialisationContractCadre(Feve f){
+
+		List<IAcheteurContratCadre> acheteurs = this.supCC.getAcheteurs(f);
+		if (acheteurs.size()>0 && this.pourcentageAVendre.get(f)<=70) {
+			IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+			journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+			if(this.isContractdEnCours(acheteur, f)){
+				//si on a déjà un contract on le récupère
+				ExemplaireContratCadre contract = null;
+
+				for (int i = 0; i < this.contratsEnCours.size(); i++) {
+					ExemplaireContratCadre contractAct = this.contratsEnCours.get(i);
+					if(contract.getAcheteur()==acheteur && contractAct.getProduit()==f && this.pourcentageAVendre.get(f)<=70){
+						contract = contractAct;
+					}
+				}
+				// on regarde si le contract se fini dans l'année
+				int tempsRestant = Filiere.LA_FILIERE.getEtape()-contract.getEcheancier().getStepFin();
+				if(Filiere.LA_FILIERE.getEtape()%24 >= tempsRestant){
+					this.renouvellementContractCadre(acheteur, f,contract);
+				}
+			}
+
+			else{
+				this.propositionContractCadre(acheteur, f);
+			}
+		} else {
+			journalCC.ajouter(" pas d'acheteur " + f);
+		}
+	}
+
+
+
+
 	public void propositionContractCadre(IAcheteurContratCadre acheteur, Feve f){
 		// vérifier si c'est un nouvel acheteur. Si c'est un ancien (avec qui on a déjà fait des contracts) on adapte la demande 
 
@@ -151,8 +189,6 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 			}
 		}
 
-		double pourcent = (quantiteTot/this.getStock(f))*100;
-		this.pourcentageAVendre.put(f,pourcent + this.pourcentageAVendre.get(f));
 
 		int temps = 24 + this.periode - Filiere.LA_FILIERE.getEtape()%24 ;
 
@@ -169,62 +205,23 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 					} else {
 						this.contratsEnCours.add(contrat);
 						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+
+						double pourcent = (quantiteTot/this.getStock(f))*100;
+						this.pourcentageAVendre.put(f,pourcent + this.pourcentageAVendre.get(f));
+
 					}
 
 
 	}
 
 
-	//initier des contracts
-	public void initialisationContractCadre(Feve f){
-
-		List<IAcheteurContratCadre> acheteurs = this.supCC.getAcheteurs(f);
-		if (acheteurs.size()>0 && this.pourcentageAVendre.get(f)<=70) {
-			IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-			journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
-			if(this.isContractdEnCours(acheteur, f)){
-				//si on a déjà un contract on le récupère
-				ExemplaireContratCadre contract = null;
-
-				for (int i = 0; i < this.contratsEnCours.size(); i++) {
-					ExemplaireContratCadre contractAct = this.contratsEnCours.get(i);
-					if(contract.getAcheteur()==acheteur && contractAct.getProduit()==f){
-						contract = contractAct;
-					}
-				}
-				// on regarde si le contract se fini dans l'année
-				int tempsRestant = Filiere.LA_FILIERE.getEtape()-contract.getEcheancier().getStepFin();
-				if(Filiere.LA_FILIERE.getEtape()%24 >= tempsRestant){
-					this.renouvellementContractCadre(acheteur, f,contract);
-				}
-			}
-
-			else{
-				this.propositionContractCadre(acheteur, f);
-			}
-		} else {
-			journalCC.ajouter("   pas d'acheteur " + f);
-		}
-	}
-
-
-
-
-	public boolean isContractdEnCours(IAcheteurContratCadre acheteur, Feve f){ //vérifie si l'acheteur a un conctract avec nous en cours sur un certain produit
-		for (int i = 0; i < this.contratsEnCours.size(); i++) {
-			ExemplaireContratCadre contract = this.contratsEnCours.get(i);
-			if(contract.getAcheteur()==acheteur && contract.getProduit()==f){
-				return true;
-			}
-		}
-		return false;
-	}
+	
 
 
 
 	public void renouvellementContractCadre(IAcheteurContratCadre acheteur, Feve f, ExemplaireContratCadre contract){
 
-		int temps = 24 -this.periode + contract.getEcheancier().getStepFin() + (int) Math.floor((contract.getEcheancier().getStepFin() - contract.getEcheancier().getStepDebut())/24) * 24  ;
+		int temps = contract.getEcheancier().getStepFin() - contract.getEcheancier().getStepDebut();
 		double quantiteTot = contract.getQuantiteTotale();
 
 		ArrayList<Double> quantites = new ArrayList<>();
@@ -239,8 +236,48 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 					} else {
 						this.contratsEnCours.add(contrat);
 						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						double pourcent = (quantiteTot/this.getStock(f))*100;
+						this.pourcentageAVendre.put(f,pourcent + this.pourcentageAVendre.get(f));
 					}
 	}
+
+	/////////////////////////////////
+	//         Indicateurs         //
+	/////////////////////////////////
+
+
+	public boolean isContractdEnCours(IAcheteurContratCadre acheteur, Feve f){ //vérifie si l'acheteur a un conctract avec nous en cours sur un certain produit
+		for (int i = 0; i < this.contratsEnCours.size(); i++) {
+			ExemplaireContratCadre contract = this.contratsEnCours.get(i);
+			if(contract.getAcheteur()==acheteur && contract.getProduit()==f){
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+	public boolean onPeutVendre(Feve f, Echeancier e){
+		int tempsRestant = 24 - Filiere.LA_FILIERE.getEtape();
+		double quantiteRestante = 0;
+		for (int i = 0; i <tempsRestant; i++) {
+			
+		}
+
+		double pourcent = (quantite/this.getStock(f))*100;
+
+		boolean cetteAnnee = pourcent < 100 - this.pourcentageAVendre.get(f);
+
+
+	}
+
+
+
+	//////////////////////////////////////////
+	//         En fonction du temps         //
+	//////////////////////////////////////////
+
 
 	public void next(){
 		super.next();
