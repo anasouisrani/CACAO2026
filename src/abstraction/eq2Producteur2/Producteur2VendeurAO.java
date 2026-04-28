@@ -1,5 +1,6 @@
 package abstraction.eq2Producteur2;
 
+/** @author Simon */
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
@@ -27,21 +28,19 @@ public class Producteur2VendeurAO extends Producteur2VendeurCC implements IVende
             return null;
         }
         Feve f = (Feve) offre.getProduit();
-        
-        // On vérifie si on a assez de stock disponible (hors Contrats Cadres)
+
+        // On vérifie si on a assez de stock disponible
         double quantiteDemandee = offre.getQuantiteT();
         double disponible = this.stockvar.get(f).getValeur(this.cryptogramme) - this.restantDu(f);
-        
+
         if (disponible >= quantiteDemandee) {
-            // On calcule notre coût de production pour cette fève
             double coutProd = this.cout_unit_t.getOrDefault(f, 0.0);
-            
-            // Pour l'AO, on prend une petite marge (ex: +5%) car les quantités sont souvent massives
-            // Si c'est équitable, on prend plus de marge (ex: +20%)
+
             double marge = f.isEquitable() ? 1.20 : 1.05;
             double prixPropose = coutProd * marge;
-            
-            this.journalAO.ajouter("Proposition Vente AO : " + quantiteDemandee + "T de " + f + " à " + prixPropose + "€/T");
+
+            this.journalAO
+                    .ajouter("Proposition Vente AO : " + quantiteDemandee + "T de " + f + " à " + prixPropose + "€/T");
             return new OffreVente(offre, this, f, prixPropose);
         }
         return null; // Pas assez de stock pour répondre à l'AO
@@ -51,20 +50,21 @@ public class Producteur2VendeurAO extends Producteur2VendeurCC implements IVende
     public void notifierVenteAO(OffreVente propositionRetenue) {
         Feve f = (Feve) propositionRetenue.getProduit();
         double quantite = propositionRetenue.getQuantiteT();
-        
+
         // Retirer la quantité du stock
         this.retirerDuStock(f, quantite);
-        
-        // Synchroniser avec les variables Bourse (car on hérite de Producteur2Bourse)
+
         if (this.stocks.containsKey(f) && this.stockvar.containsKey(f)) {
             this.stocks.get(f).setValeur(this, this.stockvar.get(f).getValeur());
         }
-        
-        this.journalAO.ajouter("Vente AO réussie : " + quantite + "T de " + f + " au prix de " + propositionRetenue.getPrixT() + "€/T");
+
+        this.journalAO.ajouter("Vente AO réussie : " + quantite + "T de " + f + " au prix de "
+                + propositionRetenue.getPrixT() + "€/T");
     }
 
     @Override
     public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
-        this.journalAO.ajouter("Vente AO échouée pour " + propositionRefusee.getQuantiteT() + "T de " + propositionRefusee.getProduit());
+        this.journalAO.ajouter("Vente AO échouée pour " + propositionRefusee.getQuantiteT() + "T de "
+                + propositionRefusee.getProduit());
     }
 }

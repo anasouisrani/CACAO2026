@@ -118,7 +118,6 @@ public class Récolte extends Producteur2Acteur {
 
     /**
      * Gère les coûts supplémentaires pour les certifications équitables (label)
-     * et accumule les coûts pour chaque fève équitable
      */
     public void gererCoutsEquitables() {
         double coutLabelTotal = 0.0;
@@ -126,7 +125,6 @@ public class Récolte extends Producteur2Acteur {
 
         for (Plantation p : plantations) {
             if (p.estEquitable() && p.verifierConditionsEquitables()) {
-                // Accumuser le coût du label à la fève équitable
                 double coutLabel = p.getCoutLabelEquitable(etape);
                 if (coutLabel > 0) {
                     coutLabelTotal += coutLabel;
@@ -202,18 +200,6 @@ public class Récolte extends Producteur2Acteur {
                 + nb_MQ + " MQ, " + nb_HQ + " HQ et " + nb_HQ_E + " HQ_E");
     }
 
-    /**
-     * Certifie un pourcentage des parcelles F_HQ en F_HQ_E avec conditions
-     * équitables
-     * Divise les plantations en partie certifiée et non-certifiée
-     * 
-     * @param pourcentageACertifier : pourcentage de parcelles HQ à certifier (0.0 à
-     *                              100.0)
-     * @param nombreOuvriers        : nombre d'ouvriers minimum par parcelle
-     * @param salaireMini           : salaire minimum journalier en euros
-     * @param coutLabel             : coût du label en euros par mois (tous les 2
-     *                              next)
-     */
     public void certifierPlantationsEquitable(double pourcentageACertifier, int nombreOuvriers, double salaireMini,
             double coutLabel) {
         if (pourcentageACertifier < 0 || pourcentageACertifier > 100) {
@@ -244,11 +230,9 @@ public class Récolte extends Producteur2Acteur {
             Plantation plantationNonCertifiee = plantationHQ.diviserPlantation(pourcentageACertifier);
 
             if (plantationNonCertifiee != null) {
-                // Ajouter la partie non-certifiée à la liste des plantations
                 plantations.add(plantationNonCertifiee);
                 totalParcellesNonCertifiees += plantationNonCertifiee.getParcelles();
 
-                // Certifier la partie restante
                 plantationHQ.activerCertificationEquitable(nombreOuvriers, salaireMini, coutLabel, 100.0);
                 totalParcellesCertifiees += plantationHQ.getParcelles();
 

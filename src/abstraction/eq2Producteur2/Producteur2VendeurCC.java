@@ -18,7 +18,7 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
     private SuperviseurVentesContratCadre supCC;
     private List<ExemplaireContratCadre> contratsEnCours;
     private static final double MARGE_MIN = 1.2;
-    private static final double MARGE_EQUITABLE = 2.0;  // Marge plus importante pour les fèves équitables
+    private static final double MARGE_EQUITABLE = 2.0; // Marge plus importante pour les fèves équitables
 
     public Producteur2VendeurCC() {
         super();
@@ -41,20 +41,31 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
             this.journalContratCadre.ajouter("Stock disponible " + f + " = " + disponible);
             double seuilCC = (f == Feve.F_HQ) ? 10.0 : 100.0;
             if (disponible > seuilCC) {
-                // On propose une quantité réaliste pour ne pas effrayer l'acheteur (ex: max 500 T / step)
-                double parStep = Math.max(100.0, Math.min(disponible / 12.0, 500.0));
+                double parStep = Math.max(100.0, Math.min(disponible / 12.0, 1000.0));
                 Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
                 List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
                 if (!acheteurs.isEmpty()) {
-                    IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-                    ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme, false);
-                    if (contrat != null) {
-                        if (!this.contratsEnCours.contains(contrat)) {
-                            this.contratsEnCours.add(contrat);
+                    for (IAcheteurContratCadre acheteur : acheteurs) {
+                        if (disponible <= seuilCC)
+                            break; // On arrête si on a plus assez de stock
+
+                        ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme,
+                                false);
+                        if (contrat != null) {
+                            if (!this.contratsEnCours.contains(contrat)) {
+                                this.contratsEnCours.add(contrat);
+                            }
+                            this.journalContratCadre.ajouter("Contrat signé avec " + acheteur.getNom() + " pour " + f
+                                    + " = " + contrat.getQuantiteTotale());
+
+                            disponible -= contrat.getQuantiteTotale();
+                            parStep = Math.max(100.0, Math.min(disponible / 12.0, 1000.0));
+                            if (parStep >= 100.0)
+                                e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
+                        } else {
+                            this.journalContratCadre
+                                    .ajouter("Négociation échouée avec " + acheteur.getNom() + " pour " + f);
                         }
-                        this.journalContratCadre.ajouter("Contrat signé avec " + acheteur.getNom() + " pour " + f + " = " + contrat.getQuantiteTotale());
-                    } else {
-                        this.journalContratCadre.ajouter("Négociation échouée pour " + f);
                     }
                 } else {
                     this.journalContratCadre.ajouter("Pas d'acheteur pour " + f);
@@ -82,7 +93,8 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
         double disponible = stocks.get(f).getValeur(this.cryptogramme) - restantDu(f);
         double seuilVente = (f == Feve.F_HQ) ? 100.0 : 1200.0;
         boolean peutVendre = disponible > seuilVente;
-        this.journalContratCadre.ajouter("vend? " + f + " (disponible=" + disponible + ", seuil=" + seuilVente + ") -> " + peutVendre);
+        this.journalContratCadre
+                .ajouter("vend? " + f + " (disponible=" + disponible + ", seuil=" + seuilVente + ") -> " + peutVendre);
         return peutVendre;
     }
 
@@ -97,11 +109,9 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
             return null;
         }
         double quantiteDemandee = contrat.getEcheancier().getQuantiteTotale();
-        // Regle stricte : on accepte l'echeancier si la quantite demandee est couverte par le stock.
         if (quantiteDemandee <= disponible) {
             return contrat.getEcheancier();
         }
-        // Sinon on contre-propose sur 12 steps avec notre disponible.
         double quantiteParStep = disponible / 12.0;
         if (quantiteParStep * 12.0 < SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
             return null;
@@ -128,20 +138,18 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
         Feve feve = (Feve) contrat.getProduit();
         double prixActuel = contrat.getPrix();
         double prixMinimum = this.prixMinimumAcceptable(feve);
-        
-        // Regle stricte : on coupe la nego si le prix est sous le seuil.
         if (prixActuel < prixMinimum) {
-            this.journalContratCadre.ajouter("Refus prix CC " + prixActuel + " < seuil " + prixMinimum + " pour " + feve);
+            this.journalContratCadre
+                    .ajouter("Refus prix CC " + prixActuel + " < seuil " + prixMinimum + " pour " + feve);
             return 0.0;
         }
-        
-        // Pour les fèves équitables, proposer un prix premium
+
         if (feve == Feve.F_HQ_E) {
             double prixPropose = Math.max(prixActuel, prixMinimum);
             this.journalContratCadre.ajouter("Prix équitable proposé: " + prixPropose + " € pour " + feve);
             return prixPropose;
         }
-        
+
         return prixActuel;
     }
 
@@ -157,16 +165,13 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
                 : ((abstraction.eqXRomu.bourseCacao.BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao"))
                         .getCours(feve).getValeur();
         double coutProd = this.cout_unit_t.getOrDefault(feve, 0.0);
-        
+
         // Pour les fèves équitables (F_HQ_E), appliquer une meilleure marge
         if (feve == Feve.F_HQ_E) {
-            // Marge premium sur les coûts de production
             double prixEquitable = coutProd * MARGE_EQUITABLE;
-            // Assurer un minimum respectueux du coût
             return Math.max(prixEquitable, coutProd * 1.5);
         }
-        
-        // Pour les autres fèves, proposer le prix de la bourse (ou légèrement au dessus du coût de prod)
+
         return Math.max(cours, coutProd * 1.1);
     }
 
@@ -182,7 +187,8 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
         if (stockFeve != null && stockVarFeve != null) {
             stockFeve.setValeur(this, stockVarFeve.getValeur());
         }
-        this.journalContratCadre.ajouter("Livraison de " + livre + " t de " + f + " pour contrat " + contrat.getNumero());
+        this.journalContratCadre
+                .ajouter("Livraison de " + livre + " t de " + f + " pour contrat " + contrat.getNumero());
         return livre;
     }
 }
