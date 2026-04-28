@@ -47,35 +47,23 @@ public class ContratCadre2 extends Approvisionnement implements IAcheteurContrat
         }
     }
 
+
     @Override
     protected void methodeIntermediaireAchat(ChocolatDeMarque cdm, double besoinParEtape, double prixCible, double prixMax) {
         this.besoinCourant = besoinParEtape;
         this.prixCibleCourant = prixCible;
         this.prixMaxCourant = prixMax;
+        this.lancement_CC = true; // On marque qu'on est à l'initiative
 
         SuperviseurVentesContratCadre sup = (SuperviseurVentesContratCadre) (Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
         List<IVendeurContratCadre> vendeurs = sup.getVendeurs(cdm);
 
         if (vendeurs.size() > 0) {
-            // Échéancier de 12 étapes
             Echeancier ech = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, besoinParEtape);
-    
-            ExemplaireContratCadre c = sup.demandeAcheteur(this, vendeurs.get(0), cdm, ech, this.cryptogramme, false);
-    
-            if (c != null) {
-                this.mesContrats.add(c);
-            
-                // 1. Mise à jour du stock prédit (flux physique)
-                this.actualiserStockPredit(c);
-            
-                // 2. Mise à jour du prix d'achat (flux financier)
-                // On mémorise le prix unitaire obtenu pour affiner les prochaines négociations
-                this.prixDAchat.put(cdm, c.getPrix());
-            
-                // Petit ajout pour le suivi
-                this.journal5.ajouter(Color.CYAN, Color.BLACK, "Prix d'achat actualisé pour " + cdm + " : " + c.getPrix());
-            }
+            // On lance la négociation
+            sup.demandeAcheteur(this, vendeurs.get(0), cdm, ech, this.cryptogramme, false);
         }
+        this.lancement_CC = false; // Reset après la négociation
     }
 
     public boolean achete(IProduit produit) {

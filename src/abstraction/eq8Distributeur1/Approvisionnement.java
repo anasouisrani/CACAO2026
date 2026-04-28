@@ -71,6 +71,33 @@ public class Approvisionnement extends Distributeur1Acteur {
     }
 
     /**
+    * Calcule le prix d'achat moyen pondéré par les quantités pour chaque chocolat de marque
+    * en se basant sur les contrats cadres en cours.
+    */
+    protected void actualiserPrixDachatParContrats() {
+        for (ChocolatDeMarque cdm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+            double quantiteTotale = 0;
+            double coutTotal = 0;
+
+            for (ExemplaireContratCadre contrat : this.mesContrats) {
+                if (contrat.getProduit().equals(cdm)) {
+                    // On récupère la quantité totale restant à livrer ou livrée dans ce contrat
+                    double qteContrat = contrat.getQuantiteTotale();
+                    quantiteTotale += qteContrat;
+                    coutTotal += qteContrat * contrat.getPrix();
+                }
+            }
+
+            if (quantiteTotale > 0) {
+                double prixMoyenPondere = coutTotal / quantiteTotale;
+                this.prixDAchat.put(cdm, prixMoyenPondere);
+            }
+        }
+        // Si aucun contrat n'existe, on garde la valeur précédente (initialisée par le ClientFinal)
+    }
+    
+
+    /**
      * Répartit les chocolats de la filière dans les 6 listes et les trie par prix de vente croissant
      */
     public void trierChocolatsParPrix() {
