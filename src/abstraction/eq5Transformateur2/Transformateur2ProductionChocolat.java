@@ -17,9 +17,49 @@ public class Transformateur2ProductionChocolat extends Transformateur2Fabriquant
     @Override
     public void next() {
         super.next();
-        ProductionChocolat(Chocolat.C_BQ, 5000.0);
-        ProductionChocolat(Chocolat.C_MQ, 5000.0);
-        ProductionChocolat(Chocolat.C_HQ, 5000.0);
+
+        // 1. PAIEMENT DES EMPLOYÉS (Coût fixe) 
+        double coutSalaires = 9000 * 625.0;
+        
+        // On demande à la banque de payer nos employés
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaires des employés", coutSalaires);
+
+        // 2. OPTIMISATION DE LA PRODUCTION (Flux tendu)
+        double stockCibleHQ = 2500.0;
+        double stockCibleMQ = 4000.0;
+        double stockCibleBQ = 3000.0;
+
+        // On recrée nos références exactes pour lire les stocks
+        ChocolatDeMarque chocoHQ = new ChocolatDeMarque(Chocolat.C_HQ, "Ferrara Rocher", 100);
+        ChocolatDeMarque chocoMQ = new ChocolatDeMarque(Chocolat.C_MQ, "Ferrara Rocher", 100);
+        ChocolatDeMarque chocoBQ = new ChocolatDeMarque(Chocolat.C_BQ, "Ferrara Rocher", 45); 
+
+        // On calcule ce qu'il nous MANQUE pour atteindre l'objectif
+        double aProduireHQ = stockCibleHQ - this.getStock_chocolatDeMarque(chocoHQ);
+        double aProduireMQ = stockCibleMQ - this.getStock_chocolatDeMarque(chocoMQ);
+        double aProduireBQ = stockCibleBQ - this.getStock_chocolatDeMarque(chocoBQ);
+
+        // Capacité de production de notre usine 
+        double capaciteRestante = 9000 * 8.4; 
+
+        // 3. On lance la production par ordre de priorité (le HQ rapporte le plus !)        
+        if (aProduireHQ > 0 && capaciteRestante > 0) {
+            double prodHQ = Math.min(aProduireHQ, capaciteRestante);
+            this.ProductionFerraraHQ(prodHQ);
+            capaciteRestante -= prodHQ; // On met à jour la capacité restante
+        }
+        
+        if (aProduireMQ > 0 && capaciteRestante > 0) {
+            double prodMQ = Math.min(aProduireMQ, capaciteRestante);
+            this.ProductionFerraraMQ(prodMQ);
+            capaciteRestante -= prodMQ;
+        }
+
+        if (aProduireBQ > 0 && capaciteRestante > 0) {
+            double prodBQ = Math.min(aProduireBQ, capaciteRestante);
+            this.ProductionFerraraBQ(prodBQ);
+            capaciteRestante -= prodBQ;
+        }
     }
 
     public void ProductionChocolat(Chocolat c,Double n){
