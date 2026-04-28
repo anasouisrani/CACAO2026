@@ -34,9 +34,13 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
         this.pourcentageAVendre.put(Feve.F_MQ_E,0.);
         this.pourcentageAVendre.put(Feve.F_HQ,0.);
         this.pourcentageAVendre.put(Feve.F_HQ_E,0.);
-		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 
     }
+
+	public void initialiser() {
+		super.initialiser();
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+	}
 
 
     /**
