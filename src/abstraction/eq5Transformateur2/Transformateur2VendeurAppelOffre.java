@@ -18,31 +18,49 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AchatAppelO
         super();
     }
 
-	public OffreVente proposerVente(AppelDOffre offre){
+	public OffreVente proposerVente(AppelDOffre offre) {
         IProduit p = offre.getProduit();
-            
-        // Si le produit n'est pas un chocolat de marque, on refuse
+        
+        // 1. On refuse si ce n'est pas un chocolat de marque
         if (!(p instanceof ChocolatDeMarque)) {
             return null;
         }
-            
+        
         ChocolatDeMarque cdm = (ChocolatDeMarque) p;
-            
-        // On s'assure qu'on ne vend que NOTRE marque
-        if (!cdm.getNom().equals("Ferrara Rocher")) {
+        
+        // 2. Choix stratégique : On ne vend que NOTRE marque Ferrara Rocher
+        if (!cdm.getMarque().equals("Ferrara Rocher")) {
             return null;
         }
 
+        // 3. On vérifie nos stocks !
         double stockDispo = this.getStock_chocolatDeMarque(cdm);
         if (stockDispo < offre.getQuantiteT()) {
-            return null; // Pas assez de stock, on passe notre tour
+            return null; // Pas assez de stock
         }
 
-        // 4. On calcule le prix et on fait l'offre (sans lancer aucune production ici !)
-        double coursMQ = ((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao"))).getCours(Feve.F_MQ).getValeur();
-        double prixVente = coursMQ * 1.18 * offre.getQuantiteT();
+        // 4. On calcule un prix unitaire COHÉRENT avec la gamme demandée
+        // Vous pouvez ajuster ces prix pour être plus ou moins agressif face aux autres équipes
+        double prixTonne;
+        switch (cdm.getChocolat()) {
+            case C_HQ: 
+                prixTonne = 4500.0; // Le HQ se vend cher
+                break;
+            case C_MQ: 
+                prixTonne = 3000.0; // Prix standard pour du MQ
+                break;
+            case C_BQ: 
+                prixTonne = 2000.0; // Prix bas pour du BQ pour s'assurer de remporter l'offre
+                break;
+            default:   
+                prixTonne = 2500.0;
+                break;
+        }
 
-        return new OffreVente(offre, this, cdm, prixVente);
+        // 5. On multiplie par la quantité pour avoir le prix TOTAL de la transaction
+        double prixVenteTotal = prixTonne * offre.getQuantiteT();
+
+        return new OffreVente(offre, this, cdm, prixVenteTotal);
     }
 
 	public void notifierVenteAO(OffreVente propositionRetenue){

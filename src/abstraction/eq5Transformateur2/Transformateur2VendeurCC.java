@@ -76,26 +76,42 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat){
-	List<Double> listePrix = contrat.getListePrix();
+    // 1. On récupère notre prix plancher selon la gamme demandée
+    double prixPlancherTonne;
+    if (contrat.getProduit() instanceof ChocolatDeMarque) {
+        switch (((ChocolatDeMarque) contrat.getProduit()).getChocolat()) {
+            case C_HQ: prixPlancherTonne = 4500.0; break;
+            case C_MQ: prixPlancherTonne = 3000.0; break;
+            case C_BQ: prixPlancherTonne = 2000.0; break;
+            default:   prixPlancherTonne = 2500.0; break;
+        }
+    } else {
+        return 0.0; 
+    }
+
+    double prixPlancherTotal = prixPlancherTonne * contrat.getQuantiteTotale();
     
-    // SÉCURITÉ : Si c'est le début de la négociation
+    // 2. Si le prix proposé par l'acheteur est déjà supérieur à notre minimum, 
+    // c'est parfait, on accepte tout de suite !
+    if (contrat.getPrix() >= prixPlancherTotal) {
+        return contrat.getPrix();
+    }
+
+    // 3. Sinon, on négocie
+    List<Double> listePrix = contrat.getListePrix();
+    
     if (listePrix.size() < 2) {
-        // On propose par exemple 10% de plus que le prix de base de l'acheteur
-        return contrat.getPrix() * 1.10; 
+        // Premier tour de négo : On demande notre prix plancher + 20% pour avoir de la marge
+        return prixPlancherTotal * 1.20; 
     }
     
-    // Ensuite, on fait la moyenne avec notre offre précédente
-    return ((contrat.getPrix() + listePrix.get(listePrix.size() - 2))/2)*1.20;
-	}
-
-	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
-		if (contrat.getVendeur().equals(this)) {
-			this.getJournaux().get(4).ajouter(contrat.toString()+ "\n");
-		}
-		else{
-		this.getJournaux().get(3).ajouter(contrat.toString()+ "\n");
-		}
-	}
+    // Tours suivants : On fait un pas vers l'acheteur (on coupe la poire en deux)
+    double notreDerniereOffre = listePrix.get(listePrix.size() - 2);
+    double nouvelleOffre = (contrat.getPrix() + notreDerniereOffre) / 2;
+    
+    // SÉCURITÉ : On s'assure que notre nouvelle offre ne descendra JAMAIS sous le prix plancher
+    return Math.max(nouvelleOffre, prixPlancherTotal);
+    }
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
 		if (produit instanceof ChocolatDeMarque){ 
