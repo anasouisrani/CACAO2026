@@ -150,14 +150,18 @@ public class Récolte extends Producteur2Acteur {
 
     public void action_replante() {
         for (Plantation p : plantations) {
-            if (p.estMorte() && seuil_replante(p.getTypeFeve())) {
-                p.Replante();
-                Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Replantation de "+p.getParcelles()+" parcelles de "+p.getTypeFeve());
+            // Récupérer le stock actuel de la fève de cette gamme
+            double stockFeve = stockvar.get(p.getTypeFeve()).getValeur();
+            
+            // Essayer de replanter avec la nouvelle méthode qui vérифie les conditions
+            if (p.Replante(stockFeve)) {
+                // Replantation réussie (stock <= stock_max et arbre mort)
+                Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Replantation de "+p.getParcelles()+" parcelles de "+p.getTypeFeve()+" (stock: "+stockFeve+" t, max: "+p.getStock_max()+" t)");
             }
-            else if (p.estMorte() && !seuil_replante(p.getTypeFeve())) {
-                //Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Pas de replantation de "+p.getTypeFeve()+" car le stock est trop important");
+            else if (p.estMorte() && stockFeve > p.getStock_max()) {
+                // Arbre mort mais stock trop élevé : pas de replantation
+                Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Pas de replantation de "+p.getTypeFeve()+" car le stock ("+stockFeve+" t) dépasse le seuil maximum ("+p.getStock_max()+" t)");
             }
-            else{}
         }
     }
     /**
