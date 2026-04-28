@@ -37,6 +37,7 @@ public class Transformateur2Acteur implements IActeur {
 		this.Journaux.add(new Journal("Achat Contrat Cadre", this));
 		this.Journaux.add(new Journal("Vente Contrat Cadre", this));
 		this.Journaux.add(new Journal("Achat Enchère", this));
+		this.Journaux.add(new Journal("Vente Enchère", this));
 		this.Journaux.add(new Journal("Achat Bourse", this));
 		this.Journaux.add(new Journal("Vente AO", this));
 		this.Journaux.add(new Journal("Achat AO", this));

@@ -38,6 +38,13 @@ public class Transformateur2VendeurAuxEncheres extends Transformateur2AchatEnche
                 choisie=enchere;
             }
         }
+        this.getJournaux().get(6).ajouter(choisie.toString()+ "\n");
         return choisie;
+    }
+
+    @Override
+    public void next(){
+        super.next();
+        this.VendreEncheres();
     }
 }
