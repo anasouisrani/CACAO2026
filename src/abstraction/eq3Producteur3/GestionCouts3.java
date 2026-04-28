@@ -35,7 +35,7 @@ public class GestionCouts3 {
         Filiere.LA_FILIERE.getBanque().payerCout(acteur, acteur.cryptogramme, "Coût de la main d'oeuvre", coutMO);
 
         for (Gamme g : List.of(Gamme.BQ, Gamme.MQ, Gamme.HQ)) {
-        if (acteur.agriculteurs.estEthique(g)){ // à modifier en fonction du ratio d'équitable dans une gamme
+        if (acteur.agriculteurs.getStatutHappyWorker(g)){ 
             acteur.journal_cout_periode.ajouter("Période " + Filiere.LA_FILIERE.getEtape() + " : label Happyworker pour " + g.toString() +" = "+ this.coutLabelHappyWorker);
             Filiere.LA_FILIERE.getBanque().payerCout(acteur, acteur.cryptogramme, "label Happyworker", this.coutLabelHappyWorker);
         }}
