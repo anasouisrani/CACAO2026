@@ -1,9 +1,6 @@
 package abstraction.eq9Distributeur2;
 
-import java.util.List;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.filiere.Filiere;
 
 /**
  * Gère la fixation dynamique des prix de vente EQ9
@@ -76,8 +73,8 @@ public class EQ9_StrategieFixationPrix {
      marge de base selon le type de produit
      */
     private double obtenirMargeBasePourProduit(String nomProduit) {
-        // Notre marque propre EQ9 = marge maximale
-        if (nomProduit != null && nomProduit.contains("EQ9")) {
+        // Marque propre  = marge maximale
+        if (nomProduit.contains("EQ9")) {
             return MARGE_MARQUE_PROPRE;  // 35%
         }
         
