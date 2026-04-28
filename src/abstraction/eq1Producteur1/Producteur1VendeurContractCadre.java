@@ -51,11 +51,11 @@ public class Producteur1VendeurContractCadre extends Producteur1Cooperative impl
 	 * a cette etape pour ce type de produit (retourne true si il est pret a
 	 * negocier un contrat cadre pour ce type de produit).
 	 */
+
+
 	public boolean vend(IProduit produit){
         if(produit instanceof Feve){
-            if(this.getStock((Feve)produit) != 0){
-                return true;
-            }
+            return this.pourcentageAVendre.get(produit) < 70;
         }
         return false;
     }
@@ -73,7 +73,26 @@ public class Producteur1VendeurContractCadre extends Producteur1Cooperative impl
 	 * d'accord avec cet echeancier. Sinon, retourne un autre echeancier qui est une contreproposition.
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat){
-        return contrat.getEcheancier();
+		Echeancier e = contrat.getEcheancier();
+		Feve f = (Feve) contrat.getProduit();
+
+		// on regarde si on peut vendre
+		if(this.onPeutVendre(f, e)){
+			return e;
+
+		}
+
+		// on regarde si c'est 3 fois la même proposition en face
+		List<Echeancier> lastEcheanchiers = contrat.getEcheanciers();
+
+		if(lastEcheanchiers.get(-2) == e && lastEcheanchiers.get(-4) == e){
+			return null;
+		}
+
+
+		// On propose une alternative que l'on peut tenir
+		Echeancier newEcheancier = this.correctionEcheancier(e, f);
+        return newEcheancier;
     }
 
 
@@ -263,15 +282,15 @@ public class Producteur1VendeurContractCadre extends Producteur1Cooperative impl
 
 	public boolean onPeutVendre(Feve f, Echeancier e){ //on regarde si on peut vendre sur les 2 prochaines années
 		int etape = Filiere.LA_FILIERE.getEtape();
-		int tempsRestant = 24 - etape;
+		int tempsRestant = 24 - etape%24;
 		double quantiteRestante = e.getQuantiteJusquA(tempsRestant);
 		double pourcent = (quantiteRestante/this.getStock(f))*100;
 
 		boolean cetteAnnee = pourcent < 100 - this.pourcentageAVendre.get(f);
 
-		double quantiteApres = e.getQuantiteAPartirDe(etape + 48 - etape%24) ;
+		double quantiteApres = e.getQuantiteAPartirDe(etape +tempsRestant + 1) ;
 		if(e.getStepFin()> etape + 48 - etape%24){
-			quantiteApres += - e.getQuantiteAPartirDe(etape + 24 - etape%24);
+			quantiteApres +=  - e.getQuantiteAPartirDe(etape + 48 - etape%24) ;
 		}
 
 		boolean anneeApres = quantiteApres < 10000000 ; // < this.nextProd
@@ -280,6 +299,44 @@ public class Producteur1VendeurContractCadre extends Producteur1Cooperative impl
 
 	}
 
+	/////////////////////////////////
+	//         Utilitaires         //
+	/////////////////////////////////
+
+
+	public Echeancier correctionEcheancier(Echeancier echeancier, Feve f){
+
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int tempsRestant = 23 - etape%24;
+		double quantiteRestante = echeancier.getQuantiteJusquA(tempsRestant);
+		double pourcent = (quantiteRestante/this.getStock(f))*100;
+
+		double CetteAnnee = Math.min(quantiteRestante,(this.getStock(f))*(95-this.pourcentageAVendre.get(f))/100);
+
+		double quantiteApres = echeancier.getQuantiteAPartirDe(etape +tempsRestant + 1) ;
+		if(echeancier.getStepFin()> etape + 48 - etape%24){
+			quantiteApres +=  - echeancier.getQuantiteAPartirDe(etape + 48 - etape%24) ;
+		}
+
+		double quantiteSurAnnee = Math.min(quantiteApres,100000000); // b: this.pourcentage next year
+
+		List<Double> quantites = new ArrayList<>();
+		for (int i = 0; i < tempsRestant; i++) { // on ajoute pour cette année
+			quantites.add(CetteAnnee/tempsRestant);
+		}
+
+		for (int i = Math.max(etape + tempsRestant,echeancier.getStepDebut()); i < echeancier.getStepFin(); i++) { // on ajoute pour cette année
+			quantites.add(quantiteSurAnnee/24);
+		}
+
+
+
+		Echeancier newEcheancier = new Echeancier(echeancier.getStepDebut(),quantites);
+
+		return newEcheancier;
+
+	}
+	
 
 
 	//////////////////////////////////////////
