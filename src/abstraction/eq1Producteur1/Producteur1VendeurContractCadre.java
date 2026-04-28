@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncheres implements IVendeurContratCadre{
+public class Producteur1VendeurContractCadre extends Producteur1Cooperative implements IVendeurContratCadre{
 	private HashMap<Feve , Double > pourcentageAVendre = new HashMap<Feve , Double>();
 	private SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
@@ -179,10 +179,10 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 		} else {
 			switch (f) {
 				case F_BQ:
-					quantiteTot = 255000;
+					quantiteTot = Math.min(255000,this.stock.get(f)*(100-this.pourcentageAVendre.get(f)-5)/100);
 					break;
 				case F_MQ:
-					quantiteTot = 45000;
+					quantiteTot = Math.min(45000,this.stock.get(f)*(100-this.pourcentageAVendre.get(f)-5)/100);
 					break;
 				default:
 					return;
@@ -199,17 +199,19 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 		}
 
 		Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1,quantites);
-		ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur,this,f,echeancier,this.cryptogramme,false);
-					if (contrat==null) {
-						journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-					} else {
-						this.contratsEnCours.add(contrat);
-						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+		if(this.onPeutVendre(f,echeancier)){
+			ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur,this,f,echeancier,this.cryptogramme,false);
+			if (contrat==null) {
+				journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+			} else {
+				this.contratsEnCours.add(contrat);
+				journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 
-						double pourcent = (quantiteTot/this.getStock(f))*100;
-						this.pourcentageAVendre.put(f,pourcent + this.pourcentageAVendre.get(f));
+				double pourcent = (quantiteTot/this.getStock(f))*100;
+				this.pourcentageAVendre.put(f,pourcent + this.pourcentageAVendre.get(f));
 
-					}
+			}
+		}
 
 
 	}
@@ -222,7 +224,7 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 	public void renouvellementContractCadre(IAcheteurContratCadre acheteur, Feve f, ExemplaireContratCadre contract){
 
 		int temps = contract.getEcheancier().getStepFin() - contract.getEcheancier().getStepDebut();
-		double quantiteTot = contract.getQuantiteTotale();
+		double quantiteTot = Math.min(contract.getQuantiteTotale(),this.stock.get(f)*(100-this.pourcentageAVendre.get(f)-5)/100);
 
 		ArrayList<Double> quantites = new ArrayList<>();
 		for (int k = 1; k < temps + 1; k++) {
@@ -258,17 +260,22 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 
 
 
-	public boolean onPeutVendre(Feve f, Echeancier e){
-		int tempsRestant = 24 - Filiere.LA_FILIERE.getEtape();
-		double quantiteRestante = 0;
-		for (int i = 0; i <tempsRestant; i++) {
-			
-		}
-
-		double pourcent = (quantite/this.getStock(f))*100;
+	public boolean onPeutVendre(Feve f, Echeancier e){ //on regarde si on peut vendre sur les 2 prochaines années
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int tempsRestant = 24 - etape;
+		double quantiteRestante = e.getQuantiteJusquA(tempsRestant);
+		double pourcent = (quantiteRestante/this.getStock(f))*100;
 
 		boolean cetteAnnee = pourcent < 100 - this.pourcentageAVendre.get(f);
 
+		double quantiteApres = e.getQuantiteAPartirDe(etape + 48 - etape%24) ;
+		if(e.getStepFin()> etape + 48 - etape%24){
+			quantiteApres += - e.getQuantiteAPartirDe(etape + 24 - etape%24);
+		}
+
+		boolean anneeApres = quantiteApres < 10000000 ; // < this.nextProd
+
+		return anneeApres && cetteAnnee;
 
 	}
 
