@@ -20,7 +20,7 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 	public boolean vend(IProduit produit){
 		if (produit instanceof ChocolatDeMarque){ 
 			ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
-			if (!cdm.getNom().equals("Ferrara Rocher")) {
+			if (!cdm.getMarque().equals("Ferrara Rocher")) {
         	return false; // On ne vend pas les marques des concurrents !
 			}
 			if (cdm.getChocolat().isEquitable()){ // On extrait le chocolat générique pour tester
