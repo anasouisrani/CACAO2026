@@ -4,7 +4,6 @@ import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 

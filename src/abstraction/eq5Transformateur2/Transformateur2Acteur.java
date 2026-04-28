@@ -1,7 +1,6 @@
 package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
-import java.awt.geom.FlatteningPathIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.Integer;
@@ -68,7 +67,7 @@ public class Transformateur2Acteur implements IActeur {
 	/** @author Pierre
 	 */
 	public void next() {
-		for (int i = 0; i < 9; i++){
+		for (int i = 0; i < 11; i++){
 			this.Journaux.get(i).ajouter("Etape : "+ Integer.toString((Filiere.LA_FILIERE.getEtape()))+ "\n");
 		}
 		/*

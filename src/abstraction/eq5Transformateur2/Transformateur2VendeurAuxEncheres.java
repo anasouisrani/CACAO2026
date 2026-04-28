@@ -1,6 +1,5 @@
 package abstraction.eq5Transformateur2;
 
-import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.encheres.Enchere;

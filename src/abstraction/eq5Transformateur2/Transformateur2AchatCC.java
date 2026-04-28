@@ -1,13 +1,11 @@
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Feve;
 
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 /**
  * @author Pierre GUTTIEREZ
