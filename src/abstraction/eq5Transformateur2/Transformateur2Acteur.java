@@ -40,6 +40,7 @@ public class Transformateur2Acteur implements IActeur {
 		this.Journaux.add(new Journal("Achat Bourse", this));
 		this.Journaux.add(new Journal("Vente AO", this));
 		this.Journaux.add(new Journal("Achat AO", this));
+		this.Journaux.add(new Journal("Frais divers", this));
 		this.initialise=false;
 	}
 	
