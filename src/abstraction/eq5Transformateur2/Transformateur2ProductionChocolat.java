@@ -21,9 +21,9 @@ public class Transformateur2ProductionChocolat extends Transformateur2Production
     @Override
     public void next() {
         super.next();
-        ProductionChocolat(Chocolat.C_BQ, 2000.0);
-        ProductionChocolat(Chocolat.C_MQ, 1500.0);
-        ProductionChocolat(Chocolat.C_HQ, 500.0);
+        ProductionChocolat(Chocolat.C_BQ, 5000.0);
+        ProductionChocolat(Chocolat.C_MQ, 5000.0);
+        ProductionChocolat(Chocolat.C_HQ, 5000.0);
     }
 
     public void ProductionChocolat(Chocolat c,Double n){
