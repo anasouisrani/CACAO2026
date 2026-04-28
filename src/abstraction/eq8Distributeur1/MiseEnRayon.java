@@ -15,6 +15,11 @@ public class MiseEnRayon extends AppelOffre {
     public MiseEnRayon() {
         super();
     }
+    
+    public void miseajour_TailleRayon() {
+        double t = this.volumeStock.getValeur();
+        this. TailleRayon = t/2;
+    }
 
     public void executerMiseEnRayon() {
         // 1. Définition de l'espace total disponible

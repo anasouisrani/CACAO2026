@@ -62,7 +62,6 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque {
 	/** @author Alexandre Cornet */
 	public void initialiser() {
 		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
-		System.out.println(p);
 		ChocolatDeMarque C_MQ_ProntellaM = p.get(0);
 		this.Prix.put(C_MQ_ProntellaM, 14000.0);
 		ChocolatDeMarque C_HQ_Ferrara = p.get(1);
