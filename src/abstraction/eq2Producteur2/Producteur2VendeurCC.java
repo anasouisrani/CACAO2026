@@ -165,8 +165,8 @@ public class Producteur2VendeurCC extends Producteur2Bourse implements IVendeurC
             return Math.max(prixEquitable, coutProd * 1.5);
         }
         
-        // Pour les autres fèves, utiliser la marge standard
-        return Math.max(cours * MARGE_MIN, coutProd * MARGE_MIN);
+        // Pour les autres fèves, proposer le prix de la bourse (ou légèrement au dessus du coût de prod)
+        return Math.max(cours, coutProd * 1.1);
     }
 
     @Override
