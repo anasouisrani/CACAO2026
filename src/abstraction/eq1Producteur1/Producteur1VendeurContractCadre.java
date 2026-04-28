@@ -34,6 +34,7 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
         this.pourcentageAVendre.put(Feve.F_MQ_E,0.);
         this.pourcentageAVendre.put(Feve.F_HQ,0.);
         this.pourcentageAVendre.put(Feve.F_HQ_E,0.);
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 
     }
 
@@ -172,7 +173,8 @@ public class Producteur1VendeurContractCadre extends Producteur1VendeurAuxEncher
 
 	//initier des contracts
 	public void initialisationContractCadre(Feve f){
-		List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+
+		List<IAcheteurContratCadre> acheteurs = this.supCC.getAcheteurs(f);
 		if (acheteurs.size()>0 && this.pourcentageAVendre.get(f)<=70) {
 			IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 			journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
