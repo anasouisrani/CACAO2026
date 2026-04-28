@@ -24,8 +24,8 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
     protected double capaciteRayonKg = 500000.0;
     
     protected EQ9_StrategieFixationPrix strategieFixationPrix;
-    protected EQ9_GestionnaireMarques gestionnaireMarques;
-    protected EQ9_MarquePrivee marquePrivee;
+    
+   
 
     public static final String NOM_MARQUE = "EQ9";
     protected Variable indicateurMargeMoyenne;
@@ -64,8 +64,7 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
         this.prix = new HashMap<>();
         
         this.strategieFixationPrix = new EQ9_StrategieFixationPrix(journal);
-        this.gestionnaireMarques = new EQ9_GestionnaireMarques(journal);
-        this.marquePrivee = new EQ9_MarquePrivee(journal);
+        
         
         this.indicateurMargeMoyenne = new Variable("EQ9_marge_moyenne", this, 18.0);
         this.indicateurMixMarquePrivee = new Variable("EQ9_pct_marque_privee", this, 40.0);
