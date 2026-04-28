@@ -160,5 +160,5 @@ public class Producteur1Planteur extends Producteur1Stock{
             this.charge();
         }
     }
-
+///hjhjhjh
 }
