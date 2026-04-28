@@ -7,7 +7,7 @@ import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class Transformateur1AcheteurBourse extends Transformateur1Stock implements IAcheteurBourse {
+public class Transformateur1AcheteurBourse extends Transformateur1Couts implements IAcheteurBourse {
     public void notificationBlackList(int dureeEnStep){
 
     }

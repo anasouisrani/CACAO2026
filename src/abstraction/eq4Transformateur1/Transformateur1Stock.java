@@ -16,8 +16,8 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 public class Transformateur1Stock extends Transformateur1Acteur implements IFabricantChocolatDeMarque, IMarqueChocolat{
 
     private HashMap<IProduit, Double> stock;
-     private HashMap<IProduit, Double> stockPrévu;
-   
+    private HashMap<IProduit, Double> stockPrévu;
+    public double ChocoProduit;
     public ChocolatDeMarque ProntellaM= new ChocolatDeMarque(Chocolat.C_MQ, "Prontella", 65);
     public ChocolatDeMarque ProntellaB= new ChocolatDeMarque(Chocolat.C_BQ, "Prontella", 50);
     public ChocolatDeMarque ProntellaH= new ChocolatDeMarque(Chocolat.C_HQ, "Prontella", 65);
@@ -28,6 +28,7 @@ public class Transformateur1Stock extends Transformateur1Acteur implements IFabr
         super();
         this.stock=new HashMap<IProduit, Double>();
         this.stockPrévu=new HashMap<IProduit, Double>();
+        this.ChocoProduit=0;
     }
     public List<ChocolatDeMarque> getChocolatsProduits(){
 		List<ChocolatDeMarque> ListeChoco=new ArrayList<ChocolatDeMarque>();
@@ -187,7 +188,7 @@ public class Transformateur1Stock extends Transformateur1Acteur implements IFabr
         double ChocoMObtenu= F_MQ_ATransfo/0.65;
         double ChocoHObtenu= F_HQ_ATransfo/0.65;
         double ChocoHEObtenu= F_HQ_E_ATransfo/0.65;
-
+        this.ChocoProduit=ChocoBObtenu+ChocoBEObtenu+ChocoMObtenu+ChocoHObtenu+ChocoHEObtenu;  
         this.setStocksProduit(Feve.F_BQ, this.getStocksProduit(Feve.F_BQ)-F_BQ_ATransfo);
         this.setStocksProduit(ProntellaB, this.getStocksProduit(ProntellaB)+ChocoBObtenu);
         this.setStocksPrevuProduit(ProntellaB, this.getStocksPrevuProduit(ProntellaB)+ChocoBObtenu);
