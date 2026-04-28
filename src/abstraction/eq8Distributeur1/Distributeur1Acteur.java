@@ -281,21 +281,21 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque {
 	/** @author Alexandre Cornet */
 	@Override
 	public double prix(ChocolatDeMarque choco) {
-		return this.getPrixProduit(choco, this.cryptogramme);
+		switch (choco.getChocolat()) {
+		case C_HQ_E: return 30000;
+		case C_HQ : return 27000;
+		case C_MQ_E:return 16000;
+		case C_MQ :return 14000;
+		case C_BQ_E :return 25000;
+		case C_BQ : return 22000;
+		default:
+			return 0.0;
+		}
 	}
 	/** @author Alexandre Cornet */
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
-		switch (choco.getChocolat()) {
-		case C_HQ_E: return 8000;
-		case C_HQ : return 8000;
-		case C_MQ_E:return 8000;
-		case C_MQ :return 8000;
-		case C_BQ_E :return 8000;
-		case C_BQ : return 8000;
-		default:
-			return 0.0;
-		}
+		return getQuantiteEnRayon((IProduit)(choco), crypto);
 	}
 	/** @author Alexandre Cornet */
 	@Override
