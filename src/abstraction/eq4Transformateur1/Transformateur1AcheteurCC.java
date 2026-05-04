@@ -18,7 +18,7 @@ public Transformateur1AcheteurCC() {
 	}
     
     public boolean achete(IProduit produit){
-        if (produit.getType()=="Feve" && this.getStocksProduit(produit)<100000){
+        if (produit instanceof Feve && this.getStocksPrevuProduit(produit)<50000 && produit!=Feve.F_MQ_E){
             return true;
         }
         else{
@@ -43,8 +43,11 @@ public Transformateur1AcheteurCC() {
 
 
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+        super.notificationNouveauContratCadre(contrat);
+        if (contrat.getAcheteur().equals(this)){
         double quantite= contrat.getQuantiteTotale();
         this.JournalAchatCC.ajouter("Nouveau contrat cadre de "+quantite+"T de " +contrat.getProduit()+" pour "+contrat.getPrix()+"€");
+        }
     }
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){

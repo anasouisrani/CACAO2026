@@ -70,9 +70,23 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1AcheteurCC
 			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
 				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 			}
-			return new OffreVente(offre, this, cm, px);
+			double quantite= Double.min(Double.min(offre.getQuantiteT(),this.getStocksPrevuProduit(cm)),this.getStocksProduit(cm));
+			if (quantite>100){
+				AppelDOffre newoffre= new AppelDOffre(offre.getAcheteur(), cm, quantite,offre.getTeteGondole());
+				return new OffreVente(newoffre, this, cm, px);
+			}
+			else{
+				return null;
+			}
 		} else {
-			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
+			double quantite= Double.min(Double.min(offre.getQuantiteT(),this.getStocksPrevuProduit(cm)),this.getStocksProduit(cm));
+			if (quantite>100){
+				AppelDOffre newoffre= new AppelDOffre(offre.getAcheteur(), cm, quantite,offre.getTeteGondole());
+				return new OffreVente(newoffre, this, cm, prixMoyen(cm)*1.05);
+			}
+			else{
+				return null;
+			}
 		}
 //		return null;
 	}
@@ -86,8 +100,8 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1AcheteurCC
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
-		this.setStocksProduit(cm,this.getStocksProduit(cm)+quantite);
-		this.setStocksPrevuProduit(cm,this.getStocksPrevuProduit(cm)+quantite);
+		this.setStocksProduit(cm,this.getStocksProduit(cm)-quantite);
+		this.setStocksPrevuProduit(cm,this.getStocksPrevuProduit(cm)-quantite);
 
 	}
 

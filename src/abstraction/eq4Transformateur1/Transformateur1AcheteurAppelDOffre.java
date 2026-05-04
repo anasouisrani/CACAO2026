@@ -25,8 +25,8 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurAp
 		super.next();
 		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (IProduit f : this.getStock().keySet()) {
-			if (f instanceof Feve && !((Feve) f).isEquitable()) { // pas top...
-				int quantite = 5000 + Filiere.random.nextInt((int)(100001-this.getStock().get(f))); 
+			if (f instanceof Feve && f!=Feve.F_MQ_E && this.getStocksPrevuProduit(f) < 20000) { 
+				double quantite = 20000-this.getStocksPrevuProduit(f); 
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, f, quantite);
 				journalAO.ajouter("   Je lance un appel d'offre de "+quantite+" T de "+f);
 				if (ov!=null) { // on a retenu l'une des offres de vente

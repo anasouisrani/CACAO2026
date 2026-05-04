@@ -7,7 +7,7 @@ import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class Transformateur1AcheteurBourse extends Transformateur1Stock implements IAcheteurBourse {
+public class Transformateur1AcheteurBourse extends Transformateur1Couts implements IAcheteurBourse {
     public void notificationBlackList(int dureeEnStep){
 
     }
@@ -16,7 +16,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stock implemen
     }
     /**@author Safta Yassine */ 
     public double demande(Feve f, double cours){
-        if (f.getGamme()==Gamme.MQ && !f.isEquitable()) {
+        if (this.getStocksPrevuProduit(f) < 20000){
 			return 20000; 
 		}
 		else{
