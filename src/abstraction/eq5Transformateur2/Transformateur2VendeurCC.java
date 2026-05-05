@@ -65,7 +65,7 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 
     // 3. On calcule le prix souhaité basé sur nos coûts (prix_MP) + une marge de 35%
     // Sécurité : si prix_MP vaut 0 au début du jeu, on simule un coût de base de 1500€
-    double coutDeRevient = (prix_MP > 0) ? prix_MP : 1500.0; 
+    double coutDeRevient = prix_MP; 
     double prixCalculeTonne = coutDeRevient * 1.35;
 
     // 4. Stratégie : On prend le plus haut entre notre prix calculé et notre prix plancher absolu
@@ -109,8 +109,11 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
     double notreDerniereOffre = listePrix.get(listePrix.size() - 2);
     double nouvelleOffre = (contrat.getPrix() + notreDerniereOffre) / 2;
     
-    // SÉCURITÉ : On s'assure que notre nouvelle offre ne descendra JAMAIS sous le prix plancher
-    return Math.max(nouvelleOffre, prixPlancherTotal);
+    if (contrat.getPrix() >= nouvelleOffre) {
+        return contrat.getPrix();
+    } else{
+    return nouvelleOffre;
+    }
     }
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){

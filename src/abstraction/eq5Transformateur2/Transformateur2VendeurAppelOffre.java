@@ -3,11 +3,8 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
-import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 /**
  * @author Pierre GUTTIEREZ
@@ -44,16 +41,16 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AchatAppelO
         double prixTonne;
         switch (cdm.getChocolat()) {
             case C_HQ: 
-                prixTonne = 4500.0; // Le HQ se vend cher
+                prixTonne = 2000.0; // Le HQ se vend cher
                 break;
             case C_MQ: 
-                prixTonne = 3000.0; // Prix standard pour du MQ
+                prixTonne = 1500.0; // Prix standard pour du MQ
                 break;
             case C_BQ: 
-                prixTonne = 2000.0; // Prix bas pour du BQ pour s'assurer de remporter l'offre
+                prixTonne = 1000.0; // Prix bas pour du BQ pour s'assurer de remporter l'offre
                 break;
             default:   
-                prixTonne = 2500.0;
+                prixTonne = 500.0;
                 break;
         }
 
@@ -70,6 +67,6 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AchatAppelO
     }
 
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee){
-        this.getJournaux().get(8).ajouter(propositionRefusee.toString()+ "\n");
+        this.getJournaux().get(8).ajouter("Refus" + propositionRefusee.toString()+ "\n");
     }
 }
