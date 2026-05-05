@@ -36,9 +36,7 @@ public class Producteur1Cooperative extends Producteur1Planteur{
         this.coopNonEq.put("nombre enfants", (double) nbEnfant ) ;
         this.coopNonEq.put( "nombre adultes", (double) nbForceNonEq - nbEnfant*2);
 
-        System.err.println("nb enfant : " + this.coopNonEq.get("nombre enfants"));
-        System.err.println("nb adulte non Eq : " + this.coopNonEq.get("nombre adultes"));
-        System.err.println("nb adulte Eq : " + this.coopEq.get("nombre adultes"));
+
     }
 
     public double getSalaireAdulte(boolean equitable){
@@ -100,7 +98,7 @@ public class Producteur1Cooperative extends Producteur1Planteur{
 
         Banque banque=Filiere.LA_FILIERE.getBanque();
         banque.payerCout(this, this.cryptogramme, "Masse salariales" , 15 * montant);
-        this.journal.ajouter("Salaire payé : " + montant);
+        this.journalBanque.ajouter("Salaire payé : " + montant);
     }
 
 
