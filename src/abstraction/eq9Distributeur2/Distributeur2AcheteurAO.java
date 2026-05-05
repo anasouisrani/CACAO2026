@@ -70,21 +70,14 @@ public class Distributeur2AcheteurAO extends Distributeur2Acteur implements IAch
 
         if (offreRetenue != null) {
             double prixAchat = offreRetenue.getPrixT();
-            double prixVente = prix(choco);
+            double quantiteAchetee = offreRetenue.getQuantiteT();
+            double stockActuelApreAchat = this.stock.getOrDefault(choco, 0.0);
+            this.stock.put(choco, stockActuelApreAchat + quantiteAchetee);
+            this.indicateurStockTotal.setValeur(this, getStockTotal());
 
-            if (prixAchat >= prixVente) {
-                this.journal.ajouter("Refus : achat à " + prixAchat 
-                    + "€/T non rentable pour " + choco.getNom()
-                    + " (vente à " + prixVente + "€/T)");
-                continue;
-            }
-
-            this.journal.ajouter("Achat réussi : " + (quantiteAO/1000) + "t de "
+            this.journal.ajouter("Achat réussi : " + (quantiteAchetee/1000) + "t de "
                 + choco.getNom() + " à " + prixAchat + "€/T chez "
                 + offreRetenue.getVendeur().getNom());
-
-            this.stock.put(choco, stockActuel + quantiteAO);
-            this.indicateurStockTotal.setValeur(this, getStockTotal());
         } else {
             this.journal.ajouter("Aucune offre pour " + choco.getNom());
         }
@@ -100,12 +93,17 @@ public OffreVente choisirOV(List<OffreVente> propositions) {
     OffreVente meilleureOffre = null;
     double meilleurPrix = Double.MAX_VALUE;
 
+    
+
     for (OffreVente offre : propositions) {
         double prixPropose = offre.getPrixT();
         ChocolatDeMarque choco = (ChocolatDeMarque) offre.getProduit();
 
-        // Rejeter si trop cher
-        if (prixPropose > 30000.0) continue;
+        double margeMin = 1.2; // 20% de marge minimale
+        double prixMaxAcceptable = prix(choco) / margeMin;
+
+        // Rejeter si trop cher pour notre marge minimale
+        if (prixPropose >= prixMaxAcceptable) continue;
 
         // Rejeter si vente à perte
         if (prixPropose >= prix(choco)) {
@@ -113,6 +111,10 @@ public OffreVente choisirOV(List<OffreVente> propositions) {
                 + choco.getNom() + " à " + prixPropose + "€/T");
             continue;
         }
+
+        //prise en compte de la quantité proposée
+        if (offre.getQuantiteT() < AppelDOffre.AO_QUANTITE_MIN)
+            continue;
 
         // Garder la moins chère
         if (prixPropose < meilleurPrix) {
