@@ -1,17 +1,11 @@
 package abstraction.eq5Transformateur2;
 
-import java.awt.Color;
-import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat; 
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import java.util.List;
+
 
 /**
  * @author Pierre GUTTIEREZ
@@ -75,11 +69,16 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 	 *         un autre prix correspondant a sa contreproposition.
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
-		if (contrat.getPrix() <= contrat.getQuantiteTotale()*0.85*((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao"))).getCours(Feve.F_MQ).getValeur()){
-			return contrat.getPrix();
-		} else{
-			return 0.75*0.5*(contrat.getQuantiteTotale()*0.85*((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao"))).getCours(Feve.F_MQ).getValeur() + contrat.getPrix());
-		}
+		List<Double> listePrix = contrat.getListePrix();
+        
+        // SÉCURITÉ CRITIQUE : Évite le crash (IndexOutOfBoundsException) si c'est la première proposition
+        if (listePrix.size() < 2) {
+            // Au premier tour de négociation, on tente de faire baisser le prix de 10%
+            return contrat.getPrix() * 0.90; 
+        }
+        
+        // Ensuite, on négocie en faisant une moyenne entre son prix et notre ancienne offre
+        return ((contrat.getPrix() + listePrix.get(listePrix.size() - 2)) / 2) * 0.95;
 	}
 
 	/**
@@ -92,7 +91,9 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 	 * 
 	 * @param contrat
 	 */
-	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){}
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+		this.getJournaux().get(3).ajouter("Achat fève en CC : " + contrat.toString() + "\n");
+	}
 
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre afin de notifier
@@ -107,6 +108,7 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 		if (p instanceof Feve){
 			Feve f = (Feve) p;
 			this.add_feve(quantiteEnTonnes, f);
+			this.getJournaux().get(3).ajouter("Réception de " + quantiteEnTonnes + " T de " + f + " via Contrat Cadre\n");
 		}
 	}
 

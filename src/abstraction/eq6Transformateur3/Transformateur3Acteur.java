@@ -15,11 +15,14 @@ import abstraction.eqXRomu.general.VariablePrivee;
 
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eq6Transformateur3.StockFeve;
 import abstraction.eq6Transformateur3.StockChocolat;
-public class Transformateur3Acteur implements IActeur {
+
+public class Transformateur3Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected Journal journal = new Journal("Journal Eq6", this);
 	protected int cryptogramme;
@@ -29,7 +32,7 @@ public class Transformateur3Acteur implements IActeur {
 	protected StockChocolat stockChocolat;
 
 
-	protected HashMap<ChocolatDeMarque, Double> stockchocomarque;
+	protected HashMap<IProduit, Double> stockchocomarque;
     public ChocolatDeMarque LamborghiniduCacao = new ChocolatDeMarque(Chocolat.C_MQ, "LamborghiniduCacao", 70);
 
 	public Transformateur3Acteur() {
@@ -41,7 +44,7 @@ public class Transformateur3Acteur implements IActeur {
 	
 	public void initialiser() {
 		//* @author : Pol Bailleul */
-		this.stockchocomarque.put(LamborghiniduCacao,100.0);
+		this.stockchocomarque.put(LamborghiniduCacao,100000.0);
 		for (Feve feve : stockFeve.getFeves()) {
 			this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(feve+"", 15)+" = "+this.stockFeve.getQuantite(feve));
 			this.Eq6TotalStock.ajouter(this, this.stockFeve.getQuantite(feve),this.cryptogramme);
@@ -50,10 +53,13 @@ public class Transformateur3Acteur implements IActeur {
 			this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(choco+"", 15)+" = "+this.stockChocolat.getQuantite(choco));
 			this.Eq6TotalStock.ajouter(this, this.stockChocolat.getQuantite(choco),this.cryptogramme);
 		}
-		for (ChocolatDeMarque chocoMarque : this.stockchocomarque.keySet()) {
-			double quantite = this.stockchocomarque.get(chocoMarque);
-			this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(chocoMarque+"", 15)+" = "+quantite);
-			this.Eq6TotalStock.ajouter(this, quantite,this.cryptogramme);
+		for (IProduit p : this.stockchocomarque.keySet()) {
+			if (p instanceof ChocolatDeMarque) {
+				ChocolatDeMarque chocoMarque = (ChocolatDeMarque) p;
+				double quantite = this.stockchocomarque.get(chocoMarque);
+				this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(chocoMarque+"", 15)+" = "+quantite);
+				this.Eq6TotalStock.ajouter(this, quantite,this.cryptogramme);
+			}
 		}
 
 	}
@@ -82,9 +88,12 @@ public class Transformateur3Acteur implements IActeur {
 			this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(chocolat+"", 15)+" = "+this.stockChocolat.getQuantite(chocolat));
 		}
 
-		for (ChocolatDeMarque chocoMarque : this.stockchocomarque.keySet()) {
-			double quantite = this.stockchocomarque.get(chocoMarque);
-			this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(chocoMarque+"", 15)+" = "+quantite);
+		for (IProduit p : this.stockchocomarque.keySet()) {
+			if (p instanceof ChocolatDeMarque) {
+				ChocolatDeMarque chocoMarque = (ChocolatDeMarque) p;
+				double quantite = this.stockchocomarque.get(chocoMarque);
+				this.journal.ajouter("Stock de "+Journal.texteSurUneLargeurDe(chocoMarque+"", 15)+" = "+quantite);
+			}
 		}
 
 
@@ -128,7 +137,7 @@ public class Transformateur3Acteur implements IActeur {
 		return res;
 	}
 
-	public HashMap<ChocolatDeMarque, Double> getStock(){
+	public HashMap<IProduit, Double> getStock(){
         return this.stockchocomarque;
     }
 
@@ -206,6 +215,20 @@ public class Transformateur3Acteur implements IActeur {
         return quantite;
     }
 
+	public double getStockProduit(IProduit produit){
+        if (this.getStock().keySet().contains(produit)){
+        return this.getStock().get(produit);
+    }
+        else{
+            return 0;
+        }
+    }
+
+	public void setStockProduit(IProduit p, double QuantiteEnT){
+        if (this.getStock().containsKey(p)){
+        this.getStock().put(p,QuantiteEnT);
+    }
+    }
 
 
 	/* =============================================================== */

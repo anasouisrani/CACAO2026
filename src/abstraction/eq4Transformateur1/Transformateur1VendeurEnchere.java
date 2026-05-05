@@ -39,13 +39,17 @@ public class Transformateur1VendeurEnchere extends Transformateur1VendeurCC impl
 		super.next();
 		this.journalVendeurEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : this.getChocolatsProduits()) {
-			if (this.getStock().get(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
-				int quantite = 5000 + Filiere.random.nextInt((int)(this.getStock().get(cm)-4990)); // il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
+			if (this.getStock().get(cm)>5000 && this.getStocksPrevuProduit(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
+				int quantite = 5000 + Filiere.random.nextInt((int)(this.getStock().get(cm)-5000)); // il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
+				if (quantite>this.getStocksPrevuProduit(cm) || quantite>this.getStocksProduit(cm)){
+					quantite= (int) Math.round(Double.min(this.getStocksPrevuProduit(cm),this.getStocksProduit(cm)))-1;
+				}
 				Enchere enchere = supEncheres.vendreAuxEncheres(this, cryptogramme, cm, quantite);
 				journalVendeurEncheres.ajouter("   Je lance une enchere de "+quantite+" T de "+cm);
 				if (enchere!=null) { // on a retenu l'une des encheres faites
 					journalVendeurEncheres.ajouter("   Enchere finalisee : on retire "+quantite+" T de "+cm+" du stock");
 					this.getStock().put(cm, this.getStock().get(cm)-quantite);
+					this.setStocksPrevuProduit(cm, this.getStocksPrevuProduit(cm)-quantite);
 					prixRetenus.get(cm).add(enchere.getPrixTonne());
 					if (prixRetenus.get(cm).size()>10) {
 						prixRetenus.get(cm).remove(0); // on ne garde que les dix derniers prix

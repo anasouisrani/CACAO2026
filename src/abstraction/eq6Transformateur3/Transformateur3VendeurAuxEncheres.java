@@ -12,6 +12,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+/** @author Le Clézio Brevael */  
 
 public class Transformateur3VendeurAuxEncheres extends Transformateur3VendeurCCadre implements IVendeurAuxEncheres{
 

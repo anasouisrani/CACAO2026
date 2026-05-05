@@ -21,7 +21,6 @@ public class Producteur2couts extends Producteur2Stock {
         }
     }
 
-
     public void next() {
         calcul_cout_unit();
         super.next();
@@ -33,23 +32,22 @@ public class Producteur2couts extends Producteur2Stock {
 
         for (Feve f : Feve.values()) {
             double coutUnitaire = 0.0;
-            
-            // Calcul basé sur : (salaire par parcelle) / (tonnes produites par parcelle)
-            // BQ: 30 / 0.105 = 286
-            // MQ: 30 / 0.085 = 353
-            // HQ: 30 / 0.063 = 476
-            // HQ_E: 60 / 0.063 = 952
-            // On y ajoute le coût de stockage estimé par tour (7.5) et une petite marge d'amortissement
-            if (f == Feve.F_BQ) coutUnitaire = 300.0;
-            else if (f == Feve.F_MQ) coutUnitaire = 370.0;
-            else if (f == Feve.F_HQ) coutUnitaire = 500.0;
-            else if (f == Feve.F_HQ_E) coutUnitaire = 1000.0;
+
+            if (f == Feve.F_BQ)
+                coutUnitaire = 300.0;
+            else if (f == Feve.F_MQ)
+                coutUnitaire = 370.0;
+            else if (f == Feve.F_HQ)
+                coutUnitaire = 500.0;
+            else if (f == Feve.F_HQ_E)
+                coutUnitaire = 1000.0;
 
             cout_unit_t.put(f, coutUnitaire);
-            JournalCout.ajouter("Step " + etape + " : Coût unitaire de production estimé pour " + f + " = " + coutUnitaire + " €/t");
+            JournalCout.ajouter("Step " + etape + " : Coût unitaire de production estimé pour " + f + " = "
+                    + coutUnitaire + " €/t");
         }
     }
-    
+
     public double getCoutUnitaire(Feve f) {
         return this.cout_unit_t.getOrDefault(f, 0.0);
     }

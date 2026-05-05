@@ -14,6 +14,13 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre  {
 	VariablePrivee totalstocks= new VariablePrivee("EQ4T Total Stocks", "<html>Quantite totale de produits en stock</html>", this,0);
 	VariablePrivee stockProntellaM= new VariablePrivee("EQ4T Stock ProntellaM", "<html>Quantite totale de ProntellaM en stock</html>", this, 0);
 	VariablePrivee stockFevesM= new VariablePrivee("EQ4T Stock FevesM", "<html>Quantite totale de FevesM en stock</html>", this, 0);
+	VariablePrivee stockPrevuProntellaM= new VariablePrivee("EQ4T Stock Prevu ProntellaM", "<html>Quantite Prevue totale de ProntellaM en stock</html>", this, 0);
+	VariablePrivee stockProntellaBE= new VariablePrivee("EQ4T Stock ProntellaBE", "<html>Quantite totale de ProntellaBE en stock</html>", this, 0);
+	VariablePrivee stockPrevuProntellaBE= new VariablePrivee("EQ4T Stock Prevu ProntellaBE", "<html>Quantite totale de ProntellaBE en stock</html>", this, 0);
+
+
+
+
 
 
 	/** @author Safta Yassine */
@@ -34,7 +41,11 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre  {
 		super.next();
 		this.totalstocks.setValeur(this, this.getTotalStocks(), cryptogramme);
 		this.stockProntellaM.setValeur(this, this.getStocksProduit(ProntellaM), cryptogramme);
+		this.stockPrevuProntellaM.setValeur(this, this.getStocksPrevuProduit(ProntellaM), cryptogramme);
 		this.stockFevesM.setValeur(this, this.getStocksProduit(Feve.F_MQ), cryptogramme);
+		this.stockProntellaBE.setValeur(this, this.getStocksProduit(ProntellaBE), cryptogramme);
+		this.stockPrevuProntellaBE.setValeur(this, this.getStocksPrevuProduit(ProntellaBE), cryptogramme);
+
 
 		
 	}
@@ -43,6 +54,9 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre  {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(totalstocks);
 		res.add(stockProntellaM);
+		res.add(stockProntellaBE);
+		res.add(stockPrevuProntellaM);
+		res.add(stockPrevuProntellaBE);
 		res.add(stockFevesM);
 		return res;
 	}

@@ -1,8 +1,6 @@
 package abstraction.eq5Transformateur2;
 import java.util.HashMap;
-import java.util.List;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 

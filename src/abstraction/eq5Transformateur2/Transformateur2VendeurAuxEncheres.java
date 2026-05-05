@@ -1,6 +1,5 @@
 package abstraction.eq5Transformateur2;
 
-import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.encheres.Enchere;
@@ -39,6 +38,9 @@ public class Transformateur2VendeurAuxEncheres extends Transformateur2AchatEnche
             }
         }
         this.getJournaux().get(6).ajouter(choisie.toString()+ "\n");
+        Double quantite = choisie.getQuantiteT();
+        ChocolatDeMarque choco = (ChocolatDeMarque)choisie.getProduit();
+        this.remove_chocolatDeMarque(choco, quantite);
         return choisie;
     }
 

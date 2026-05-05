@@ -25,6 +25,7 @@ import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eq6Transformateur3.StockFeve;
 import abstraction.eq6Transformateur3.StockChocolat;
 
+/** @author Le Clézio Brevael */
 
 public class Transformateur3AcheteurAppelDOffre extends Transformateur3VendeurAppelDOffre implements IAcheteurAO {
 	private SuperviseurVentesAO supAO;
