@@ -138,13 +138,13 @@ public class Producteur1Planteur extends Producteur1Stock{
         double montant = 250*this.taille_totale;
         Banque banque=Filiere.LA_FILIERE.getBanque();
         banque.payerCout(this, this.cryptogramme, "Impot plantation" ,montant);
-        this.journal.ajouter("Impot plantation : " + montant);
+        this.journalBanque.ajouter("Impot plantation : " + montant);
     }
 
     public void charge(){
         Banque banque=Filiere.LA_FILIERE.getBanque();
         banque.payerCout(this, this.cryptogramme, "Masse salariale" , 617.65);
-        this.journal.ajouter("Charges payées : " + 617.65);
+        this.journalBanque.ajouter("Charges payées : " + 617.65);
     }
 
 

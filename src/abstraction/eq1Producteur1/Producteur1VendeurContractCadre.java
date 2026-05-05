@@ -371,6 +371,13 @@ public class Producteur1VendeurContractCadre extends Producteur1Cooperative impl
 	
 
 
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(this.journalCC);
+		return res;
+	}
+
+
 	//////////////////////////////////////////
 	//         En fonction du temps         //
 	//////////////////////////////////////////

@@ -98,7 +98,7 @@ public class Producteur1Cooperative extends Producteur1Planteur{
 
         Banque banque=Filiere.LA_FILIERE.getBanque();
         banque.payerCout(this, this.cryptogramme, "Masse salariales" , 15 * montant);
-        this.journal.ajouter("Salaire payé : " + montant);
+        this.journalBanque.ajouter("Salaire payé : " + montant);
     }
 
 

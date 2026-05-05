@@ -1,6 +1,7 @@
 package abstraction.eq1Producteur1;
 
 import java.util.HashMap;
+import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -110,7 +111,11 @@ public class Producteur1VendeurBourse extends Producteur1VendeurContractCadre im
 		journalBourse.ajouter(Color.RED, Color.white, "BLACKLIST : exclusion de la bourse pendant "+dureeEnStep+" steps");
     }
 
-	
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(this.journalBourse);
+		return res;
+	}
 
 }
 
