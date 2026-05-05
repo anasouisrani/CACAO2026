@@ -40,15 +40,18 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurAp
 		this.journalAO.ajouter("=================================");
 	}
 
+
+	/**@author Ewan Lefort */
 	public OffreVente choisirOV(List<OffreVente> propositions) {
-		// TODO Auto-generated method stub
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		double cours = ( bourse.getCours((Feve)propositions.get(0).getProduit())).getValeur();
-		if (propositions.get(0).getPrixT()<=cours) {
-			return propositions.get(0);
-		} else {
-			return null;
+		for (OffreVente ov : propositions) {
+			
+		double cours = ( bourse.getCours((Feve)ov.getProduit())).getValeur();
+		if (ov.getPrixT()<=0.9*cours) {
+			return ov;
 		}
+		}
+		return null;
 	}
 
 }

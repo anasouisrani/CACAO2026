@@ -30,21 +30,17 @@ public class Transformateur1AcheteurEnchere extends Transformateur1VendeurEncher
 		bourse=(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
 		this.prix=new HashMap<Feve, Double>();
-		List<Feve> cms =List.of(Feve.F_BQ,Feve.F_BQ_E,Feve.F_HQ,Feve.F_HQ_E,Feve.F_MQ,Feve.F_MQ_E);
+		List<Feve> cms =List.of(Feve.F_BQ,Feve.F_BQ_E,Feve.F_HQ,Feve.F_HQ_E,Feve.F_MQ);
 		for (Feve cm : cms) {
 			if (!cm.isEquitable()){
 			double cours= bourse.getCours(cm).getValeur();
 			prix.put(cm,  0.75*cours);
 			}
-			
 			else if (cm==Feve.F_BQ_E){
-					prix.put(cm, prix.get(Feve.F_BQ));
-			}
-			else if (cm==Feve.F_MQ_E){
-					prix.put(cm, prix.get(Feve.F_MQ));
+					prix.put(cm, prix.get(Feve.F_BQ)*0.9);
 			}
 			else if (cm==Feve.F_HQ_E){
-					prix.put(cm, prix.get(Feve.F_HQ));
+					prix.put(cm, prix.get(Feve.F_HQ)*0.9);
 			}
 			else{
 					prix.put(cm, 0.0);				
@@ -79,7 +75,12 @@ public class Transformateur1AcheteurEnchere extends Transformateur1VendeurEncher
 
 	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue) {
 		Feve cm = (Feve)(enchereNonRetenue.getMiseAuxEncheres().getProduit());
-		prix.put(cm, prix.get(cm)*1.05); // on essayera un peu plus cher
+		if (this.prix.get(cm)*1.05> bourse.getCours(cm).getValeur()) {
+			prix.put(cm, bourse.getCours(cm).getValeur()); // on n'essaiera pas de payer plus que le cours
+		}
+		else {
+			prix.put(cm, prix.get(cm)*1.05); // on essayera un peu plus cher
+		}
 		journalAchatEncheres.ajouter(" Enchere non remportee : le prix de "+cm+" passe a "+prix.get(cm));
 	}
 	
