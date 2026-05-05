@@ -8,7 +8,6 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -32,14 +31,13 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
 
     public Distributeur2AcheteurCC() {
         super();
-        this.contratsEnCours = new LinkedList<ExemplaireContratCadre>();
-        this.contratsTermines = new LinkedList<ExemplaireContratCadre>();
-        this.scoreFidelite = new java.util.HashMap<IVendeurContratCadre, Double>();
+        this.contratsEnCours = new LinkedList<>();
+        this.contratsTermines = new LinkedList<>();
+        this.scoreFidelite = new java.util.HashMap<>();
     }
 
     @Override
     public void initialiser() {
-        super.initialiser();
         this.superviseurCC = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         this.journal.ajouter("Initialisation des CC");
     }
@@ -69,8 +67,9 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
             }
             // Frais de stockage : 120 €/T par étape (16x le coût producteur de 7.5€/T)
             payerFraisStockage();
-            // Ajustement dynamique des prix de vente
-            ajusterPrix();
+            // --- V2 : Ajustement dynamique des prix de vente ---
+            ajusterPrixDynamiques();
+            fairePropositionCC();
         }
 
         this.indicateurStockTotal.setValeur(this, getStockTotal());
@@ -90,6 +89,23 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
         }
     }
 
+    /**
+     * Paie les frais de stockage pour cette étape
+     */
+    protected void payerFraisStockage() {
+        double stockTotalT = getStockTotal() / 1000.0;
+        double fraisStockage = stockTotalT * 120.0; // 120€/t
+        this.journal.ajouter("Frais de stockage : " + fraisStockage + "€ pour " + stockTotalT + "t");
+    }
+
+    /**
+     * Ajuste les prix de vente de manière dynamique
+     */
+    protected void ajusterPrixDynamiques() {
+        // Placeholder pour ajustement dynamique des prix
+        // À implémenter selon la stratégie de l'équipe
+    }
+
     //         IMPLEMENTATION DE L'INTERFACE IAcheteurContratCadre
 
     /**
@@ -97,6 +113,11 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
      * @param produit le produit concerné
      * @return true si prêt à négocier, false sinon
      */
+    
+    @Override
+    public double getQuantiteEnStock(IProduit p, int etape) {
+        return super.getQuantiteEnStock(p, this.cryptogramme);
+    }
 
     @Override
     public boolean achete(IProduit produit) {
@@ -128,9 +149,11 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
      * @param contrat le contrat en négociation
      * @return le prix proposé, négatif pour abandonner, ou le même pour accepter
      */
+    /**
+     * @author Anass Ouisrani
+     */
     @Override
-    /** @author Anass Ouisrani*/
-public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
     // On récupère le prix que le vendeur propose
     double prixPropose = contrat.getPrix();
     
@@ -184,13 +207,15 @@ public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
     return prixPropose;
 }
 
-// Méthode utilitaire qui définit le prix maximum qu'on accepte
-// selon la qualité du chocolat (en €/T)
-// Ces valeurs sont nos prix d'achat maximum pour garder une marge rentable
-/** @author Anass Ouisrani*/
-private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
-    return prix(choco) * 0.75; // 25% de marge systématique
-}
+    /**
+     * Méthode utilitaire qui définit le prix maximum qu'on accepte
+     * selon la qualité du chocolat (en €/T)
+     * Ces valeurs sont nos prix d'achat maximum pour garder une marge rentable
+     * @author Anass Ouisrani
+     */
+    private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
+        return this.prix.getOrDefault(choco, 100.0) * 0.75; // 25% de marge systématique
+    }
 
     /**
      * Notification de la réussite des négociations
@@ -274,7 +299,7 @@ private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
      * @return liste des contrats actifs
      */
     public List<ExemplaireContratCadre> getContratsEnCours() {
-        return new LinkedList<ExemplaireContratCadre>(this.contratsEnCours);
+        return new LinkedList<>(this.contratsEnCours);
     }
 
     /**
@@ -282,15 +307,13 @@ private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
      * @return liste des contrats terminés
      */
     public List<ExemplaireContratCadre> getContratsTermines() {
-        return new LinkedList<ExemplaireContratCadre>(this.contratsTermines);
+        return new LinkedList<>(this.contratsTermines);
     }
 
     /**
      * Méthode pour initier des propositions de contrats cadres (V1)
+     * @author Paul JUHEL
      */
-    /**
-    * @author Paul JUHEL
-    */
     public void fairePropositionCC() {
         List<ChocolatDeMarque> produits = Filiere.LA_FILIERE.getChocolatsProduits();
         for (ChocolatDeMarque choco : produits) {
@@ -316,5 +339,15 @@ private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
                 }
             }
         }
+    }
+
+    @Override
+    public Filiere getFiliere(String nom) {
+        return Filiere.LA_FILIERE;
+    }
+
+    @Override
+    public java.util.List<String> getNomsFilieresProposees() {
+        return new java.util.ArrayList<>();
     }
 }

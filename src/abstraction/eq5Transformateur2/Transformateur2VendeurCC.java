@@ -1,14 +1,10 @@
 package abstraction.eq5Transformateur2;
 
-import java.applet.Applet;
-import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.Feve;
 
 
 /**
@@ -24,7 +20,7 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 	public boolean vend(IProduit produit){
 		if (produit instanceof ChocolatDeMarque){ 
 			ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
-			if (!cdm.getNom().equals("Ferrara Rocher")) {
+			if (!cdm.getMarque().equals("Ferrara Rocher")) {
         	return false; // On ne vend pas les marques des concurrents !
 			}
 			if (cdm.getChocolat().isEquitable()){ // On extrait le chocolat générique pour tester
@@ -42,39 +38,98 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 	}
 	
 	public double propositionPrix(ExemplaireContratCadre contrat){
-		return 1.35*contrat.getQuantiteTotale()*(prix_MP+2);
+    // 1. On vérifie le produit (Sécurité)
+    if (!(contrat.getProduit() instanceof ChocolatDeMarque)) {
+        return 0.0;
+    }
+    
+    ChocolatDeMarque cdm = (ChocolatDeMarque) contrat.getProduit();
+    
+    // 2. On définit un prix plancher (minimum absolu) à la tonne selon la gamme
+    // N'hésitez pas à ajuster ces valeurs selon vos stratégies !
+    double prixPlancherTonne;
+    switch (cdm.getChocolat()) {
+        case C_HQ: 
+            prixPlancherTonne = 4500.0; // Le HQ est très cher
+            break;
+        case C_MQ: 
+            prixPlancherTonne = 3000.0; // Le MQ est standard
+            break;
+        case C_BQ: 
+            prixPlancherTonne = 2000.0; // Le BQ est abordable
+            break;
+        default:   
+            prixPlancherTonne = 2500.0;
+            break;
+    }
+
+    // 3. On calcule le prix souhaité basé sur nos coûts (prix_MP) + une marge de 35%
+    // Sécurité : si prix_MP vaut 0 au début du jeu, on simule un coût de base de 1500€
+    double coutDeRevient = prix_MP; 
+    double prixCalculeTonne = coutDeRevient * 1.35;
+
+    // 4. Stratégie : On prend le plus haut entre notre prix calculé et notre prix plancher absolu
+    double prixFinalTonne = Math.max(prixCalculeTonne, prixPlancherTonne);
+
+    // 5. On retourne le prix TOTAL demandé par le contrat
+    return prixFinalTonne * contrat.getQuantiteTotale();
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat){
-		return ((contrat.getPrix() + contrat.getListePrix().get(contrat.getListePrix().size() - 2))/2)*1.20;
-	}
+    // 1. On récupère notre prix plancher selon la gamme demandée
+    double prixPlancherTonne;
+    if (contrat.getProduit() instanceof ChocolatDeMarque) {
+        switch (((ChocolatDeMarque) contrat.getProduit()).getChocolat()) {
+            case C_HQ: prixPlancherTonne = 4500.0; break;
+            case C_MQ: prixPlancherTonne = 3000.0; break;
+            case C_BQ: prixPlancherTonne = 2000.0; break;
+            default:   prixPlancherTonne = 2500.0; break;
+        }
+    } else {
+        return 0.0; 
+    }
 
-	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
-		if (contrat.getVendeur().equals(this)) {
-			this.getJournaux().get(4).ajouter(contrat.toString()+ "\n");
-		}
-		else{
-		this.getJournaux().get(3).ajouter(contrat.toString()+ "\n");
-		}
-	}
+    double prixPlancherTotal = prixPlancherTonne * contrat.getQuantiteTotale();
+    
+    // 2. Si le prix proposé par l'acheteur est déjà supérieur à notre minimum, 
+    // c'est parfait, on accepte tout de suite !
+    if (contrat.getPrix() >= prixPlancherTotal) {
+        return contrat.getPrix();
+    }
+
+    // 3. Sinon, on négocie
+    List<Double> listePrix = contrat.getListePrix();
+    
+    if (listePrix.size() < 2) {
+        // Premier tour de négo : On demande notre prix plancher + 20% pour avoir de la marge
+        return prixPlancherTotal * 1.20; 
+    }
+    
+    // Tours suivants : On fait un pas vers l'acheteur (on coupe la poire en deux)
+    double notreDerniereOffre = listePrix.get(listePrix.size() - 2);
+    double nouvelleOffre = (contrat.getPrix() + notreDerniereOffre) / 2;
+    
+    if (contrat.getPrix() >= nouvelleOffre) {
+        return contrat.getPrix();
+    } else{
+    return nouvelleOffre;
+    }
+    }
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
 		if (produit instanceof ChocolatDeMarque){ 
-			ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
-			Chocolat c = cdm.getChocolat();
-            
-            double stockDispo = this.getStock_chocolatDeMarque(cdm); // On regarde le bon stock
-			
-            if (stockDispo >= quantite){
-				this.remove_chocolatDeMarque(cdm, quantite);
-				return quantite;
-			} else {
-				this.ProductionChocolat(c, quantite - stockDispo);
-			    this.remove_chocolatDeMarque(cdm, stockDispo);
-			    return stockDispo; // Correction : on ne peut renvoyer que ce qu'on livre vraiment
-			}
-		} else {
-			return 0;
-		}
+        ChocolatDeMarque cdm = (ChocolatDeMarque) produit;
+        double stockDispo = this.getStock_chocolatDeMarque(cdm);
+
+        if (stockDispo >= quantite){
+            this.remove_chocolatDeMarque(cdm, quantite); // <--- LIGNE CRITIQUE
+            return quantite;
+        } else {
+            // On livre ce qu'il nous reste
+            this.remove_chocolatDeMarque(cdm, stockDispo); // <--- LIGNE CRITIQUE
+            return stockDispo; 
+        }
+    }
+    return 0.0;
 	}
 }

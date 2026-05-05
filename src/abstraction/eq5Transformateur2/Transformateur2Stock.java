@@ -1,18 +1,12 @@
 package abstraction.eq5Transformateur2;
 
-import java.awt.Color;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.lang.Integer;
 
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
@@ -22,9 +16,7 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     // Attributs
     private HashMap<ChocolatDeMarque, Double> stock_ChocolatDeMarque;
     private HashMap<Feve, Double> stock_feve;
-    private HashMap<Chocolat, Double> stock_chocolat;
     private Variable stock_feve_affichage;
-    private Variable stock_chocolat_affichage;
     private Variable stock_ChocolatDeMarque_affichage;
     private List<SacDeFeves> sacsHQ;
     private List<SacDeFeves> sacsMQ;
@@ -32,6 +24,8 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     private List<SacDeFeves> sacsHQ_E;
     private List<SacDeFeves> sacsMQ_E;
     private List<SacDeFeves> sacsBQ_E;
+
+    private static float prixStockageTonne=20; 
     
     // Constructeur
 
@@ -97,7 +91,7 @@ public class Transformateur2Stock extends Transformateur2Acteur{
     public void add_feve(Double n, Feve q){
         assert n >= 0;
         this.stock_feve.put(q, this.stock_feve.get(q) + n);
-        this.getJournaux().get(1).ajouter("Ajout de" + (n).toString()+ "de fève de qualité" + (q).toString() + "\n");
+        this.getJournaux().get(1).ajouter("Ajout de " + (n).toString()+ " de fève de qualité " + (q).toString() + "\n");
         this.stock_feve_affichage.ajouter(this,n);
         
         int etape = Filiere.LA_FILIERE.getEtape();
@@ -134,59 +128,59 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         assert n >= 0;
         if (n <= this.stock_feve.get(q)){
             this.stock_feve.put(q, this.stock_feve.get(q) - n);
-            this.getJournaux().get(1).ajouter("Déstockage de" + (n).toString()+ "de fève de qualité" + (q).toString() + "\n");
+            this.getJournaux().get(1).ajouter("Déstockage de " + (n).toString()+ " de fève de qualité " + (q).toString() + "\n");
             this.stock_feve_affichage.retirer(this,n);
 
-            if(q==Feve.F_HQ){
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsHQ.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsHQ.get(0).getQuantite()==0.0){
+            if(q == Feve.F_HQ){
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsHQ.isEmpty()) {
+                    resteAEnlever = this.sacsHQ.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsHQ.get(0).getQuantite() <= 0.001){
                         this.sacsHQ.remove(0);
                     }
                 }
-                }
-            if(q==Feve.F_HQ_E){
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsHQ_E.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsHQ_E.get(0).getQuantite()==0.0){
+            }
+            if(q == Feve.F_HQ_E){
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsHQ_E.isEmpty()) {
+                    resteAEnlever = this.sacsHQ_E.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsHQ_E.get(0).getQuantite() <= 0.001){
                         this.sacsHQ_E.remove(0);
                     }
                 }
             }
-            if(q==Feve.F_MQ){
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsMQ.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsMQ.get(0).getQuantite()==0.0){
+            if(q == Feve.F_MQ){
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsMQ.isEmpty()) {
+                    resteAEnlever = this.sacsMQ.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsMQ.get(0).getQuantite() <= 0.001){
                         this.sacsMQ.remove(0);
                     }
                 }
             }
-            if(q==Feve.F_MQ_E){
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsMQ_E.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsMQ_E.get(0).getQuantite()==0.0){
+            if(q == Feve.F_MQ_E){
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsMQ_E.isEmpty()) {
+                    resteAEnlever = this.sacsMQ_E.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsMQ_E.get(0).getQuantite() <= 0.001){
                         this.sacsMQ_E.remove(0);
                     }
                 }
             }
-            if(q==Feve.F_BQ){
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsBQ.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsBQ.get(0).getQuantite()==0.0){
+            if(q == Feve.F_BQ){
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsBQ.isEmpty()) {
+                    resteAEnlever = this.sacsBQ.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsBQ.get(0).getQuantite() <= 0.001){
                         this.sacsBQ.remove(0);
                     }
                 }
             }
-            else{
-                Double resteAEnlever=n;
-                while (resteAEnlever>0.0) {
-                    resteAEnlever=this.sacsBQ_E.get(0).remove_feve(resteAEnlever);
-                    if(this.sacsBQ_E.get(0).getQuantite()==0.0){
+            else if (q == Feve.F_BQ_E) { // J'ai remplacé votre "else" par un "else if" plus explicite et sécurisé
+                Double resteAEnlever = n;
+                while (resteAEnlever > 0.001 && !this.sacsBQ_E.isEmpty()) {
+                    resteAEnlever = this.sacsBQ_E.get(0).remove_feve(resteAEnlever);
+                    if(this.sacsBQ_E.get(0).getQuantite() <= 0.001){
                         this.sacsBQ_E.remove(0);
                     }
                 }
@@ -198,31 +192,41 @@ public class Transformateur2Stock extends Transformateur2Acteur{
         **/
         public void update_peremption(){
             int etape = Filiere.LA_FILIERE.getEtape();
-            while(this.sacsHQ.get(0).getDatePeremption()==etape){
+            while(!this.sacsHQ.isEmpty() && this.sacsHQ.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsHQ.remove(0);
+                this.stock_feve.put(Feve.F_HQ, this.stock_feve.get(Feve.F_HQ) - sac.getQuantite());
                 SacDeFeves newSac=new SacDeFeves(Feve.F_MQ, sac.getQuantite());
+                this.stock_feve.put(Feve.F_MQ, this.stock_feve.get(Feve.F_MQ) + sac.getQuantite());
                 this.sacsMQ.add(newSac);
             }
-            while(this.sacsHQ_E.get(0).getDatePeremption()==etape){
+            while(!this.sacsHQ_E.isEmpty() && this.sacsHQ_E.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsHQ_E.remove(0);
+                this.stock_feve.put(Feve.F_HQ_E, this.stock_feve.get(Feve.F_HQ_E) - sac.getQuantite());
                 SacDeFeves newSac=new SacDeFeves(Feve.F_MQ_E, sac.getQuantite());
+                this.stock_feve.put(Feve.F_MQ_E, this.stock_feve.get(Feve.F_MQ_E) + sac.getQuantite());
                 this.sacsMQ_E.add(newSac);
             }
-            while(this.sacsMQ.get(0).getDatePeremption()==etape){
+            while(!this.sacsMQ.isEmpty() && this.sacsMQ.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsMQ.remove(0);
+                this.stock_feve.put(Feve.F_MQ, this.stock_feve.get(Feve.F_MQ) - sac.getQuantite());
                 SacDeFeves newSac=new SacDeFeves(Feve.F_BQ, sac.getQuantite());
+                this.stock_feve.put(Feve.F_BQ, this.stock_feve.get(Feve.F_BQ) + sac.getQuantite());
                 this.sacsBQ.add(newSac);
             }
-            while(this.sacsMQ_E.get(0).getDatePeremption()==etape){
+            while(!this.sacsMQ_E.isEmpty() && this.sacsMQ_E.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsMQ_E.remove(0);
+                this.stock_feve.put(Feve.F_MQ_E, this.stock_feve.get(Feve.F_MQ_E) - sac.getQuantite());
                 SacDeFeves newSac=new SacDeFeves(Feve.F_BQ_E, sac.getQuantite());
+                this.stock_feve.put(Feve.F_BQ_E, this.stock_feve.get(Feve.F_BQ_E) + sac.getQuantite());
                 this.sacsBQ_E.add(newSac);
             }
-            while(this.sacsBQ.get(0).getDatePeremption()==etape){
-                this.sacsBQ.remove(0);
+            while(!this.sacsBQ.isEmpty() && this.sacsBQ.get(0).getDatePeremption()==etape){
+                SacDeFeves sac=this.sacsBQ.remove(0);
+                this.stock_feve.put(Feve.F_BQ, this.stock_feve.get(Feve.F_BQ) - sac.getQuantite());
             }
-            while(this.sacsBQ_E.get(0).getDatePeremption()==etape){
-                this.sacsBQ_E.remove(0);
+            while(!this.sacsBQ_E.isEmpty() && this.sacsBQ_E.get(0).getDatePeremption()==etape){
+                SacDeFeves sac=this.sacsBQ_E.remove(0);
+                this.stock_feve.put(Feve.F_BQ_E, this.stock_feve.get(Feve.F_BQ_E) - sac.getQuantite());
             }
         }
 
@@ -251,6 +255,22 @@ public class Transformateur2Stock extends Transformateur2Acteur{
             return this.stock_ChocolatDeMarque.get(choco);
         }
         return 0.0;
+    }
+/**@author Maxence */
+    @Override
+    public void next(){
+        super.next();
+        this.update_peremption();
+        
+        Double stockTotal= this.getStock_feve_total();
+        for (Double stock_chocoMarque:this.stock_ChocolatDeMarque.values()){
+            stockTotal=stockTotal+stock_chocoMarque;
+        }
+        if(stockTotal != 0.0){
+            Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"EQ5 payement stockage",Transformateur2Stock.prixStockageTonne*stockTotal);
+        }
+        this.getJournaux().get(10).ajouter("Payement de " + Transformateur2Stock.prixStockageTonne*stockTotal + " pour le stockage"+"\n");
+        
     }
 
 }
