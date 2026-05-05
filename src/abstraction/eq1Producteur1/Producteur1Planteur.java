@@ -15,6 +15,7 @@ public class Producteur1Planteur extends Producteur1Stock {
     private double taille_totale = 1000000;
     private double tailleEq     = 850000;
     private double tailleNonEq  = 150000;
+    private double capaciteProchaine;
     protected Journal journalPlantation;
     /**
      * @author Théophile Trillat
@@ -159,7 +160,7 @@ public class Producteur1Planteur extends Producteur1Stock {
         double tailleBQProchaine = tailleAPlanter_prochaine * 0.85;
         double tailleMQProchaine = tailleAPlanter_prochaine * 0.15;
  
-        double capaciteProchaine = capaciteTotale
+        this capaciteProchaine = capaciteTotale
                 + (tailleBQProchaine * 1800)  // BQ planté l'an prochain
                 + (tailleMQProchaine * 3500); // MQ planté l'an prochain
  
@@ -172,7 +173,9 @@ public class Producteur1Planteur extends Producteur1Stock {
         this.journalPlantation.ajouter("Production estimée l'année prochaine : " + capaciteProchaine + " kg");
     }
  
-
+    public double getCapaciteProchaine() {
+        return this.capaciteProchaine;
+    }
 
     public void impots(){
         double montant = 250*this.taille_totale;
