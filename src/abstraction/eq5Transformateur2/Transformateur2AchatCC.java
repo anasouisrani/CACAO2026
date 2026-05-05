@@ -50,9 +50,28 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 	 *         du contrat (contrat.getEcheancier()) si l'acheteur est d'accord pour
 	 *         un tel echeancier. Sinon, retourne un nouvel echeancier que le
 	 *         superviseur soumettra au vendeur.
+	 * @author Pierre et Maxence
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
-			return contrat.getEcheancier();
+			Echeancier echeancier=contrat.getEcheancier();
+			superviseurCC.recapitulerContratsEnCours();;
+			if(echeancier.getNbEcheances()<6){
+				return echeancier;
+			}
+			else{
+				Integer debut = echeancier.getStepDebut();
+				Echeancier proposition = new Echeancier(debut);
+				for (int index = debut; index < debut+5; index++) {
+					proposition.ajouter(echeancier.getQuantite(index));
+				}
+				if(proposition.echeancierAcceptable()){
+					return proposition;
+				}
+				else{
+					return null;
+				}
+			}
+
 	}
 
 	/**

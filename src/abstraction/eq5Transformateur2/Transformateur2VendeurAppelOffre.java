@@ -65,6 +65,6 @@ public class Transformateur2VendeurAppelOffre extends Transformateur2AchatAppelO
     }
 
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee){
-        this.getJournaux().get(8).ajouter("Refus" + propositionRefusee.toString()+ "\n");
+        this.getJournaux().get(8).ajouter("Refus de l'offre: "+propositionRefusee.toString()+ "\n");
     }
 }

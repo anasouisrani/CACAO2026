@@ -6,6 +6,7 @@ import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Gamme;
 /**
  * @author Maxence
  */
@@ -42,6 +43,17 @@ public class Transformateur2VendeurAuxEncheres extends Transformateur2AchatEnche
         Double quantite = choisie.getQuantiteT();
         ChocolatDeMarque choco = (ChocolatDeMarque)choisie.getProduit();
         this.remove_chocolatDeMarque(choco, quantite);
+        
+        Integer indice=2;
+        Gamme gamme = choco.getGamme();
+        if (gamme.equals(Gamme.HQ)){
+            indice = 0;
+        }
+        else if (gamme.equals(Gamme.MQ)){
+            indice = 1;
+        }
+        this.updatePrixEnchere(indice, choisie.getPrixTonne());
+        
         return choisie;
     }
 
