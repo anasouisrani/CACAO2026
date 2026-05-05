@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * @author Paul Juhel et Paul ROSSIGNOL
+ * @author Paul Juhel
  */
 
 public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements IAcheteurContratCadre {
