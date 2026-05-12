@@ -18,6 +18,10 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarque, IMarqueChocolat {
 	protected int cryptogramme;
 	protected Journal journal;
+	protected Journal journalStocks;
+	protected Journal journalCC;
+	protected Journal journalAO;
+	protected Journal journalFinancier;
 	protected Map<IProduit, Double> stock;
 	protected Variable indicateurStockTotal;
     protected Map<ChocolatDeMarque, Double> prix;
@@ -35,7 +39,11 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
      * @author Paul Juhel
      */
 	public Distributeur2Acteur() {
-		this.journal = new Journal("Journal EQ9", this);
+		this.journal = new Journal("Journal EQ9 - Général", this);
+		this.journalStocks = new Journal("Journal EQ9 - Stocks", this);
+		this.journalCC = new Journal("Journal EQ9 - Contrats Cadres", this);
+		this.journalAO = new Journal("Journal EQ9 - Appels d'offres", this);
+		this.journalFinancier = new Journal("Journal EQ9 - Finances", this);
 		this.stock = new HashMap<>();
 		this.indicateurStockTotal = new Variable("EQ9_stock_total", this, 0.0);
 	}
@@ -140,6 +148,10 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
+		res.add(journalStocks);
+		res.add(journalCC);
+		res.add(journalAO);
+		res.add(journalFinancier);
 		return res;
 	}
 
