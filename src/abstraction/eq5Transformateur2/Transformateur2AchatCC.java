@@ -70,7 +70,10 @@ public class Transformateur2AchatCC extends Transformateur2VendeurAuxEncheres im
 				Integer debut = echeancier.getStepDebut();
 				Echeancier proposition = new Echeancier(debut);
 				for (int index = debut; index < debut+10; index++) {
-					proposition.ajouter(echeancier.getQuantite(index));
+					if(echeancier.getQuantite(index)<2000){
+						proposition.ajouter(2000);
+					}
+					else{proposition.ajouter(echeancier.getQuantite(index));}
 				}
 				if(proposition.echeancierAcceptable()){
 					return proposition;
