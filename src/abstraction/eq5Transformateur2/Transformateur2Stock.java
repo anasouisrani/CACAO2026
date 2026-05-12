@@ -305,7 +305,7 @@ public class Transformateur2Stock extends Transformateur2Marque{
     @Override
     public void next(){
         super.next();
-        /*this.update_peremption();*/
+        this.update_peremption();
         
         Double stockTotal= this.getStock_feve_total();
         for (Object key : this.stock_ChocolatDeMarque.keySet()) {
@@ -316,7 +316,6 @@ public class Transformateur2Stock extends Transformateur2Marque{
             Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"EQ5 payement stockage",Transformateur2Stock.prixStockageTonne*stockTotal);
         }
         this.getJournaux().get(10).ajouter("Payement de " + Transformateur2Stock.prixStockageTonne*stockTotal + " pour le stockage"+"\n");
-        this.getJournaux().get(10).ajouter("stock feves: "+this.getStock_feve_total());
     }
 
 }
