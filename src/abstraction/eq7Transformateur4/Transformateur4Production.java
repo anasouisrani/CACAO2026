@@ -81,7 +81,10 @@ public class Transformateur4Production extends Transformateur4Marques implements
         }
     }
         
-        
+    // Coûts de production 
+
+    
+
     
 
     public List<ChocolatDeMarque> getChocolatsProduits() {

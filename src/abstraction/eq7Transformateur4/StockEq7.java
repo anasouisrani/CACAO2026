@@ -85,7 +85,7 @@ public class StockEq7 {
             return;
         }
         while (quantity>0.){
-            if (this.actions.get(i).getGamme()==quality && this.actions.size()>0){
+            if (this.actions.size()>0 && this.actions.get(i).getGamme()==quality){
                 if (this.actions.get(i).getQuantity()<quantity){
                     quantity=quantity - this.actions.get(i).getQuantity();
                     this.actions.remove(i);

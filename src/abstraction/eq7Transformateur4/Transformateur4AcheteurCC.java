@@ -75,4 +75,9 @@ public class Transformateur4AcheteurCC extends Transformateur4AcheteurBourse imp
         this.get_Stock().add(quantiteEnTonnes,Gamme.BQ);
     }
 
+    public void next(){
+        super.next();
+        
+    }
+
 }

@@ -24,12 +24,20 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4Vente impl
 		//journal.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
         super.next();
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
-			if (this.get_StockChoco_BQ().getValeur()>200) {
-				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatsProduits().get(0), 20000.0);
+			if (this.get_StockChoco_BQ().getValeur()>1000000) {
+				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatsProduits().get(0), 500000.0);
 				if (retenue!=null) {
 					this.get_StockChoco_BQ().setValeur(this, this.get_StockChoco_BQ().getValeur()-retenue.getMiseAuxEncheres().getQuantiteT());
 					this.journal_vente_enchere.ajouter("vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T a "+retenue.getAcheteur().getNom());
-				} else {
+				}
+				/* 
+				Enchere retenue2 = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatsProduits().get(0), 250000.0);
+				
+				if (retenue2!=null) {
+					this.get_StockChoco_BQ().setValeur(this, this.get_StockChoco_BQ().getValeur()-retenue2.getMiseAuxEncheres().getQuantiteT());
+					this.journal_vente_enchere.ajouter("vente de "+retenue2.getMiseAuxEncheres().getQuantiteT()+" T a "+retenue2.getAcheteur().getNom());} 
+					*/
+				else {
 					this.journal_vente_enchere.ajouter("pas d'offre retenue");
 				}
 			}
