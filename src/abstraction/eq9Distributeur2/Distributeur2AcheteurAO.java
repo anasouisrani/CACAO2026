@@ -29,6 +29,10 @@ public class Distributeur2AcheteurAO extends Distributeur2Acteur implements IAch
         SuperviseurVentesAO superviseurAO = (SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO");
         List<ChocolatDeMarque> produits = Filiere.LA_FILIERE.getChocolatsProduits();
 
+        if (produits == null || produits.isEmpty()) {
+            return;
+        }
+
         for (ChocolatDeMarque choco : produits) {
             double stockActuel = this.stock.getOrDefault(choco, 0.0);
             double stockProjete = stockActuel + restantDu(choco);
