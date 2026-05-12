@@ -126,6 +126,9 @@ public class Transformateur2Stock extends Transformateur2Marque{
     **/
     public void remove_feve(Double n, Feve q){
         assert n >= 0;
+        if (n > this.stock_feve.get(q) && n <= this.stock_feve.get(q) + 0.1) {
+            n = this.stock_feve.get(q); 
+        }
         if (n <= this.stock_feve.get(q)){
             this.stock_feve.put(q, this.stock_feve.get(q) - n);
             this.getJournaux().get(1).ajouter("Déstockage de " + (n).toString()+ " de fève de qualité " + (q).toString() + "\n");
@@ -244,6 +247,9 @@ public class Transformateur2Stock extends Transformateur2Marque{
     public void remove_chocolatDeMarque(ChocolatDeMarque choco, Double n){
         assert n >= 0;
         Double stockActuel = this.getStock_chocolatDeMarque(choco);
+        if (n > stockActuel && n <= stockActuel + 0.1) {
+            n = stockActuel;
+        }
         if (n <= stockActuel){
             this.stock_ChocolatDeMarque.put(choco, stockActuel - n); 
             this.getJournaux().get(2).ajouter("Déstockage de " + n.toString() + " de chocolat de marque " + choco.getNom() + "\n");
