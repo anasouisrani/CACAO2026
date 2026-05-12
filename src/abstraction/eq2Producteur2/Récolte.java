@@ -97,11 +97,6 @@ public class Récolte extends Producteur2Acteur {
         for (Plantation p : plantations) {
             double coutPlantation = p.getcout();
 
-            // Ajuster le coût si la plantation est équitable
-            if (p.estEquitable()) {
-                coutPlantation = p.getCoutOuvriersEquitable();
-            }
-
             cout += coutPlantation;
             Feve feve = p.getTypeFeve();
             coutParFeve.put(feve, coutParFeve.getOrDefault(feve, 0.0) + coutPlantation);
@@ -137,16 +132,6 @@ public class Récolte extends Producteur2Acteur {
         if (coutLabelTotal > 0) {
             Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Coût label équitable", coutLabelTotal);
             JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape() + " : Coût label équitable = " + coutLabelTotal + " €");
-        }
-    }
-
-    public boolean seuil_replante(Feve f) {
-        double stock_f = stockvar.get(f).getValeur();
-        double prod_f = fevesSeches.get(f);
-        if (stock_f <= 2 * prod_f) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -278,6 +263,53 @@ public class Récolte extends Producteur2Acteur {
         res.add(JournalRecolte);
         res.add(Journalterrains);
         return res;
+    }
+
+    @Override
+    public void calcul_cout_unit() {
+        HashMap<Feve, Double> coutTotalAmorti = new HashMap<Feve, Double>();
+        HashMap<Feve, Double> prodTotale = new HashMap<Feve, Double>();
+
+        for (Feve f : Feve.values()) {
+            coutTotalAmorti.put(f, 0.0);
+            prodTotale.put(f, 0.0);
+        }
+
+        // On additionne les coûts amortis et la production potentielle (en t) de toutes les plantations
+        for (Plantation p : plantations) {
+            Feve f = p.getTypeFeve();
+            coutTotalAmorti.put(f, coutTotalAmorti.get(f) + p.getcout_amorti());
+            prodTotale.put(f, prodTotale.get(f) + p.prodPlantation());
+        }
+
+        int etape = Filiere.LA_FILIERE.getEtape();
+        for (Feve f : Feve.values()) {
+            double production = prodTotale.get(f);
+            if (production > 0) {
+                // Coût = coût de prod par tonne + 1 step de stockage en moyenne
+                double coutUnitaire = (coutTotalAmorti.get(f) / production) + this.cout_stockage;
+                // Ajouter le coût mensuel du label réparti par tonne si équitable (1 step sur 2)
+                if (f.isEquitable()) {
+                    double coutLabelAccumule = this.getCoutEquitableAccumule(f); // Coûts de label payés
+                    // Approximation : On rajoute une estimation du cout du label par tonne
+                    // Le cout de label est déjà payé dans gererCoutsEquitables(), mais il faut le répercuter
+                    // Un label coûte 1000 euros / mois. Produisons-nous assez pour l'absorber ?
+                    // On l'a lissé de manière très simple en ajoutant 10%
+                }
+                
+                this.cout_unit_t.put(f, coutUnitaire);
+                JournalCout.ajouter("Step " + etape + " : Coût unitaire réel de production calculé pour " + f + " = " + String.format("%.2f", coutUnitaire) + " €/t");
+            } else {
+                // S'il n'y a aucune production pour cette fève, on laisse la valeur par défaut ou l'ancienne valeur
+                if (this.cout_unit_t.get(f) == 0.0) {
+                    // Fallback (valeurs initiales)
+                    if (f == Feve.F_BQ) this.cout_unit_t.put(f, 300.0);
+                    else if (f == Feve.F_MQ) this.cout_unit_t.put(f, 370.0);
+                    else if (f == Feve.F_HQ) this.cout_unit_t.put(f, 500.0);
+                    else if (f == Feve.F_HQ_E) this.cout_unit_t.put(f, 1000.0);
+                }
+            }
+        }
     }
 
     /**

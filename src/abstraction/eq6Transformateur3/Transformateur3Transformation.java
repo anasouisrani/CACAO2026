@@ -32,9 +32,13 @@ import abstraction.eq6Transformateur3.StockChocolat;
 /**
  * Classe simple de transformation des fèves en chocolat pour EQ6.
  * Version avec :
- * - qualité du chocolat calculée selon les règles du prof
+ * - qualité du chocolat calculée selon les règles
  * - qualité perçue
  */
+
+
+/** @author : Selma Ben Abdelkader */
+
 public class Transformateur3Transformation extends Transformateur3Acteur{
 
     

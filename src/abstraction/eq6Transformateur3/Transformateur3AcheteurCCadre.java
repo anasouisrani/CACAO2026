@@ -41,23 +41,25 @@ public class Transformateur3AcheteurCCadre extends Transformateur3AcheteurBourse
 		super.next();
 		this.journalCC.ajouter("Etape"+Filiere.LA_FILIERE.getEtape());
 				for (Feve f : stockFeve.getFeves()) {
-					if (true) { 
-						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeve.getQuantite(f)-restantDu(f))/12); // au moins 100
-						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
-						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-							if (contrat==null) {
-								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+					if (f == Feve.F_HQ_E && f == Feve.F_MQ_E ) { // pas top...
+						if (true) { 
+							this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+							double parStep = Math.max(100, (21200-stockFeve.getQuantite(f)-restantDu(f))/12); // au moins 100
+							Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+							List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+							if (vendeurs.size()>0) {
+								IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+								journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+								ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+								if (contrat==null) {
+									journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								}
 							} else {
-								this.contratsEnCours.add(contrat);
-								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								journalCC.ajouter("   pas de vendeur");
 							}
-						} else {
-							journalCC.ajouter("   pas de vendeur");
 						}
 					}
 				}
@@ -106,7 +108,7 @@ public class Transformateur3AcheteurCCadre extends Transformateur3AcheteurBourse
 		Feve f = (Feve) produit;
 		return stockFeve.getQuantite(f)+restantDu(f) < 150000;
 	}
-
+ 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 //		return null;
 		if (!contrat.getProduit().getType().equals("Feve")) {
