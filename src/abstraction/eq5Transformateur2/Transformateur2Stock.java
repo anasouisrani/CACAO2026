@@ -223,10 +223,12 @@ public class Transformateur2Stock extends Transformateur2Marque{
             while(!this.sacsBQ.isEmpty() && this.sacsBQ.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsBQ.remove(0);
                 this.stock_feve.put(Feve.F_BQ, this.stock_feve.get(Feve.F_BQ) - sac.getQuantite());
+                this.stock_feve_affichage.retirer(this, sac.getQuantite());
             }
             while(!this.sacsBQ_E.isEmpty() && this.sacsBQ_E.get(0).getDatePeremption()==etape){
                 SacDeFeves sac=this.sacsBQ_E.remove(0);
                 this.stock_feve.put(Feve.F_BQ_E, this.stock_feve.get(Feve.F_BQ_E) - sac.getQuantite());
+                this.stock_feve_affichage.retirer(this, sac.getQuantite());
             }
         }
 
