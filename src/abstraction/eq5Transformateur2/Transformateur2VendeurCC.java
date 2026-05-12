@@ -166,7 +166,7 @@ public class Transformateur2VendeurCC extends Transformateur2AchatCC implements 
 
         if (stockDispo >= quantite){
             this.remove_chocolatDeMarque(cdm, quantite); // <--- LIGNE CRITIQUE
-            this.getJournaux().get(4).ajouter("Livraison Totale" +contrat.getNumero() + " - " + contrat.getAcheteur().getNom() + " - " + String.valueOf(quantite)+"\n");
+            this.getJournaux().get(4).ajouter("Livraison Totale: " +contrat.getNumero() + " - " + contrat.getAcheteur().getNom() + " - " + String.valueOf(quantite)+"\n");
             return quantite;
         } else {
             this.remove_chocolatDeMarque(cdm, stockDispo); // <--- LIGNE CRITIQUE
