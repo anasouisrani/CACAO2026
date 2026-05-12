@@ -230,6 +230,21 @@ public class Transformateur3Acteur implements IActeur, IMarqueChocolat, IFabrica
     }
     }
 
+	public double getStockPrevuProduit(IProduit produit){
+		if (this.getStock().keySet().contains(produit)){
+		return this.getStock().get(produit);
+	}
+		else{
+			return 0;
+		}
+	}
+
+	public void setStockPrevuProduit(IProduit p, double QuantiteEnT){
+		if (this.getStock().containsKey(p)){
+		this.getStock().put(p,QuantiteEnT);
+	}
+	}
+
 
 	/* =============================================================== */
 	/*                  IAcheteurBourse implementation                 */

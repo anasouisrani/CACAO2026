@@ -178,6 +178,7 @@ public class Plantation {
     }
 
     public double getcout() {
+        double salaire_total = getCoutOuvriersEquitable();
         if ((age == 0) && (replante == false)) {
             return parcelles*prix_achat + cout_cooperative;
         }
@@ -185,7 +186,7 @@ public class Plantation {
             return parcelles*prix_replantation + cout_cooperative;
         }
         else if (age <= dureeDeVie){
-            return parcelles*salaire_employe + cout_cooperative;
+            return salaire_total + cout_cooperative;
         }
         else {
             return 0;
@@ -193,6 +194,7 @@ public class Plantation {
     }
 
     public double getcout_amorti() {
+        double salaire_total = getCoutOuvriersEquitable();
         if ((age == 0) && (replante == false)) {
             return cout_cooperative + parcelles*prix_achat / 960;
         }
@@ -200,10 +202,10 @@ public class Plantation {
             return cout_cooperative + parcelles*prix_replantation / 960;
         }
         else if ((age <= dureeDeVie) && (replante == false)){
-            return parcelles*salaire_employe + cout_cooperative + (parcelles*prix_achat / 960);
+            return salaire_total + cout_cooperative + (parcelles*prix_achat / 960);
         }
         else if ((age <= dureeDeVie) && (replante == true)){
-            return parcelles*salaire_employe + cout_cooperative + (parcelles*prix_replantation / 960);
+            return salaire_total + cout_cooperative + (parcelles*prix_replantation / 960);
         }
         else {
             return 0;

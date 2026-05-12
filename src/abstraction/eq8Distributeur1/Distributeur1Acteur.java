@@ -101,7 +101,7 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque {
 			
     	    // On récupère notre prix d'achat moyen (PMP) calculé dans Approvisionnement/ContratCadre
     	    // Si on n'a pas de prix d'achat (pas encore de contrat), on garde un prix par défaut élevé
-    	    double prixAchatMoyen = this.prixDAchat.getOrDefault(cdm, 0.0);
+    	    double prixAchatMoyen = this.prixDAchat.getOrDefault(cdm, this.Prix.getOrDefault(cdm, 1000.0));
 			
     	    if (prixAchatMoyen > 0) {
     	        // Application de la marge de 20% (PrixVente = PrixAchat * 1.20)
