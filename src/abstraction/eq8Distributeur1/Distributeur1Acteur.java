@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarqueChocolat {
+public class Distributeur1Acteur implements IDistributeurChocolatDeMarque {
 	
 	protected Journal journal0;/** @author Ewen Landron */
 	protected Journal journal1;/** @author Alexandre Cornet */
@@ -62,8 +62,10 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarq
 	}
 	/** @author Alexandre Cornet */
 	public void initialiser() {
-		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
+
 		
+		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
+
 		for (int i=0; i<p.size(); i++){
 			if (p.get(i).getGamme() == abstraction.eqXRomu.produits.Gamme.BQ && !p.get(i).isEquitable()) {
 				this.Prix.put((IProduit)(p.get(i)), 22000.0);
@@ -321,6 +323,7 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarq
 	/** @author Alexandre Cornet */
 	@Override
 	public double prix(ChocolatDeMarque choco) {
+		/** 
 		switch (choco.getChocolat()) {
 		case C_HQ_E: return 30000;
 		case C_HQ : return 27000;
@@ -331,6 +334,8 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarq
 		default:
 			return 0.0;
 		}
+		*/
+		return getPrixProduit((IProduit)(choco), this.cryptogramme);
 	}
 	/** @author Alexandre Cornet */
 	@Override
@@ -357,13 +362,6 @@ public class Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarq
 		
 	}
 
-	public List<String> getMarquesChocolat(){
-		List<String> L = new ArrayList<String>();
-		List<ChocolatDeMarque> p=Filiere.LA_FILIERE.getChocolatsProduits();
-		for (int i=0; i<p.size(); i++){
-			L.add(p.get(i).getMarque());
-
-		}
-		return L;
-	}
+	
+	
 }
