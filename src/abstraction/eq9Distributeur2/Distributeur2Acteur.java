@@ -13,8 +13,9 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 
-public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarque {
+public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarque, IMarqueChocolat {
 	protected int cryptogramme;
 	protected Journal journal;
 	protected Journal journalStocks;
@@ -409,7 +410,12 @@ private double estimerPrixConcurrent(ChocolatDeMarque choco) {
     // Le prix moyen du marché représente le prix concurrent
     return Filiere.LA_FILIERE.prixMoyen(choco, etape - 1);
 }
-
+@Override
+public List<String> getMarquesChocolat() {
+    List<String> marques = new ArrayList<>();
+    marques.add(NOM_MARQUE); // "EQ9"
+    return marques;
+}
 
 }
 
