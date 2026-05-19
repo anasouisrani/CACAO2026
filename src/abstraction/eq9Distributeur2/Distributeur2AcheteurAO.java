@@ -25,6 +25,10 @@ public Distributeur2AcheteurAO(){
     //  recherche
 
     protected double restantDu(abstraction.eqXRomu.produits.IProduit produit){
+        // déléguer à la logique CC si disponible
+        if (this instanceof Distributeur2AcheteurCC) {
+            return ((Distributeur2AcheteurCC)this).restantDu(produit);
+        }
         return 0.0;
     }
     public void faireUnAppelDOffre() {
@@ -38,8 +42,8 @@ public Distributeur2AcheteurAO(){
         for (ChocolatDeMarque choco : produits) {
             double stockActuel = this.stock.getOrDefault(choco, 0.0);
             double stockProjete = stockActuel ;
-            double seuilMin = 10.0;    // 10 tonnes : seuil minimum 
-            double stockCible = 50.0;  // 50 tonnes : stock visé
+            double seuilMin = EQ9Config.SEUIL_MIN_T;    
+            double stockCible = EQ9Config.STOCK_CIBLE_T;  
 
             // Calculer la quantité à acheter en tenant compte des livraisons CC déjà prévues
             double quantiteAO = 0.0;
@@ -56,7 +60,7 @@ public Distributeur2AcheteurAO(){
             }
 
             // Respecter la quantité minimum des AO
-            if (quantiteAO < AppelDOffre.AO_QUANTITE_MIN) {
+            if (quantiteAO < Math.max(AppelDOffre.AO_QUANTITE_MIN, EQ9Config.MIN_ACHAT_AO_T)) {
                 quantiteAO = AppelDOffre.AO_QUANTITE_MIN;
             }
 

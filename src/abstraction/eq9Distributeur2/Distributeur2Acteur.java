@@ -25,7 +25,7 @@ public class Distributeur2Acteur implements IActeur, IDistributeurChocolatDeMarq
     protected Map<IProduit, Double> stock;
     protected Variable indicateurStockTotal;
     protected Map<ChocolatDeMarque, Double> prix;
-    protected double capaciteRayonTonnes = 500.0;
+    protected double capaciteRayonTonnes = EQ9Config.CAPACITE_RAYON_T;
 
     protected EQ9_StrategieFixationPrix strategieFixationPrix;
 

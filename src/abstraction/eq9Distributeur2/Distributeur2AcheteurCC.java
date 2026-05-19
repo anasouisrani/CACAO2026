@@ -73,7 +73,7 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
      */
     protected void payerFraisStockage() {
         double stockTotalT = getStockTotal();
-        double fraisStockage = stockTotalT * 120.0; // 120€/t
+        double fraisStockage = stockTotalT * EQ9Config.FRAIS_STOCKAGE_EUR_PAR_T;
         if (fraisStockage > 0) {
             Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Frais de stockage", fraisStockage);
         }
@@ -425,7 +425,7 @@ public class Distributeur2AcheteurCC extends Distributeur2AcheteurAO implements 
      * Ces valeurs sont nos prix d'achat maximum pour garder une marge rentable
      */
     private double getPrixMaxAcceptable(ChocolatDeMarque choco) {
-        return this.prix.getOrDefault(choco, 100.0) * 0.75; // 25% de marge systématique
+        return this.prix.getOrDefault(choco, 100.0) * EQ9Config.COEF_ESTIMATION_ACHAT; // 25% de marge systématique
     }
 
     @Override
